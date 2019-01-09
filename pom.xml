@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>21</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.hbn</groupId>
+    <artifactId>Flume-SqlSource</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Flume SqlSource</name>
+
+    <properties>
+        <!-- Set default encoding to UTF-8 to remove maven complaints -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Java compiler configuration -->
+        <sourceJavaVersion>1.8</sourceJavaVersion>
+        <targetJavaVersion>1.8</targetJavaVersion>
+
+        <!-- defaults for flaky test and focused test exclusions -->
+        <test.exclude.pattern>$</test.exclude.pattern> <!-- junk pattern -->
+        <test.include.pattern>**/Test*.java</test.include.pattern>
+        <siteUrlDeployment>file://people.apache.org/www/incubator.apache.org/flume</siteUrlDeployment>
+        <stagingDirectory>${project.basedir}/target/docs</stagingDirectory>
+
+        <activemq.version>5.7.0</activemq.version>
+        <asynchbase.version>1.7.0</asynchbase.version>
+        <avro.version>1.7.4</avro.version>
+        <bundle-plugin.version>2.3.7</bundle-plugin.version>
+        <checkstyle.tool.version>8.12</checkstyle.tool.version>
+        <codehaus.jackson.version>1.9.3</codehaus.jackson.version>
+        <commons-cli.version>1.2</commons-cli.version>
+        <commons-codec.version>1.8</commons-codec.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-compress.version>1.4.1</commons-compress.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
+        <commons-io.version>2.1</commons-io.version>
+        <commons-lang.version>2.5</commons-lang.version>
+        <curator.version>2.6.0</curator.version>
+        <derby.version>10.14.1.0</derby.version>
+        <elasticsearch.version>0.90.1</elasticsearch.version>
+        <fasterxml.jackson.version>2.9.7</fasterxml.jackson.version>
+        <fest-reflect.version>1.4</fest-reflect.version>
+        <geronimo-jms.version>1.1.1</geronimo-jms.version>
+        <gson.version>2.2.2</gson.version>
+        <guava.version>18.0</guava.version>
+        <guava-old.version>11.0.2</guava-old.version>
+        <hadoop.version>2.9.0</hadoop.version>
+        <hbase.version>1.0.0</hbase.version>
+        <hbase2.jetty.version>9.3.19.v20170502</hbase2.jetty.version>
+        <hbase2.version>2.0.0</hbase2.version>
+        <httpcore.version>4.4.6</httpcore.version>
+        <httpclient.version>4.5.3</httpclient.version>
+        <irclib.version>1.10</irclib.version>
+        <jersey.version>1.8</jersey.version>
+        <jetty.version>9.4.6.v20170531</jetty.version>
+        <joda-time.version>2.9.9</joda-time.version>
+        <junit.version>4.10</junit.version>
+        <kafka.version>2.0.1</kafka.version>
+        <kite.version>1.0.0</kite.version>
+        <hive.version>1.0.0</hive.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <log4j.version>2.10.0</log4j.version>
+        <mapdb.version>0.9.9</mapdb.version>
+        <mina.version>2.0.4</mina.version>
+        <mockito.version>1.9.0</mockito.version>
+        <mvn-antrun-plugin.version>1.8</mvn-antrun-plugin.version>
+        <mvn-assembly-plugin.version>3.1.0</mvn-assembly-plugin.version>
+        <mvn-build-helper-plugin>3.0.0</mvn-build-helper-plugin>
+        <mvn-checkstyle-plugin.version>3.0.0</mvn-checkstyle-plugin.version>
+        <mvn-checksum-plugin.version>1.7</mvn-checksum-plugin.version>
+        <mvn-clean-plugin.version>3.1.0</mvn-clean-plugin.version>
+        <mvn-compiler-plugin.version>3.8.0</mvn-compiler-plugin.version>
+        <mvn-gpg-plugin.version>1.6</mvn-gpg-plugin.version>
+        <mvn-javadoc-plugin.version>2.9</mvn-javadoc-plugin.version>
+        <mvn-paranamer-plugin.version>2.8</mvn-paranamer-plugin.version>
+        <mvn-pmd-plugin.version>3.11.0</mvn-pmd-plugin.version>
+        <mvn-site-plugin.version>3.7.1</mvn-site-plugin.version>
+        <mvn-sphinx-plugin>1.0.3</mvn-sphinx-plugin>
+        <mvn-spotbugs-plugin.version>3.1.7</mvn-spotbugs-plugin.version>
+        <mvn-surefire-plugin.version>2.22.1</mvn-surefire-plugin.version>
+        <netty.version>3.10.6.Final</netty.version>
+        <netty-all.version>4.1.17.Final</netty-all.version>
+        <protobuf.version>2.5.0</protobuf.version>
+        <rat.version>0.12</rat.version>
+        <snappy-java.version>1.1.4</snappy-java.version>
+        <solr-global.version>4.3.0</solr-global.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <system-rules.version>1.17.0</system-rules.version>
+        <thrift.version>0.9.3</thrift.version>
+        <twitter4j.version>3.0.3</twitter4j.version>
+        <xalan.version>2.7.2</xalan.version>
+        <xerces.version>2.9.1</xerces.version>
+        <wiremock.version>1.53</wiremock.version>
+        <zookeeper.version>3.4.5</zookeeper.version>
+    </properties>
+
+
+
+    
+</project>
