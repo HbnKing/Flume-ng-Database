@@ -1,4 +1,5 @@
-package com.hbn.mongo.source;
+/*
+package com.hbn.mongo.sink;
 
 import com.google.common.base.Throwables;
 import com.mongodb.MongoClient;
@@ -18,15 +19,20 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.gzczy.MongodbSink.MongoSinkConstants.*;
+import static com.hbn.mongo.sink.MongoSinkConstants.USER;
 
+*/
 /**
  * 逐条插入
  * 可以插入至到不同的集合指定的表中
- */
+ *
+ *//*
+
 
 public class MongoSinkByServer extends AbstractSink implements Configurable {
 
 	private static final Logger logger = LoggerFactory.getLogger(MongoSinkByServer.class);
+	private static final String DATABASE = ;
 
 	private MongoClient client;
 
@@ -181,4 +187,4 @@ public class MongoSinkByServer extends AbstractSink implements Configurable {
 		String password = context.getString(PASSWORD);
 		return MongoCredential.createCredential(user, database, password.toCharArray());
 	}
-}
+}*/

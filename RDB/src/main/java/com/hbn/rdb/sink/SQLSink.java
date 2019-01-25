@@ -1,4 +1,4 @@
-package com.hbn.mysql.sink;
+package com.hbn.rdb.sink;
 
 /**
  * @author wangheng
@@ -23,9 +23,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class MysqlSink extends AbstractSink implements Configurable {
+public class SQLSink extends AbstractSink implements Configurable {
 
-    private Logger LOG = LoggerFactory.getLogger(MysqlSink.class);
+    private Logger LOG = LoggerFactory.getLogger(SQLSink.class);
     private String hostname;
     private String port;
     private String databaseName;
@@ -36,7 +36,7 @@ public class MysqlSink extends AbstractSink implements Configurable {
     private Connection conn;
     private int batchSize;
 
-    public MysqlSink() {
+    public SQLSink() {
         LOG.info("MysqlSink start...");
     }
 

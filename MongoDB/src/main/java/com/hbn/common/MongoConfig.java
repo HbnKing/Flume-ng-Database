@@ -240,5 +240,41 @@ public class MongoConfig implements Configurable {
         }
         super.start();
         logger.info("MongoDB sink started");
-    }*/
+    }
+    private List<ServerAddress> getSeeds(String seedsString) {
+		List<ServerAddress> seeds = new LinkedList<ServerAddress>();
+		String[] seedStrings = StringUtils.deleteWhitespace(seedsString).split(",");
+		for (String seed : seedStrings) {
+			String[] hostAndPort = seed.split(":");
+			String host = hostAndPort[0];
+			int port;
+			if (hostAndPort.length == 2) {
+				port = Integer.parseInt(hostAndPort[1]);
+			} else {
+				port = 27017;
+			}
+			seeds.add(new ServerAddress(host, port));
+		}
+
+		return seeds;
+	}
+
+	private String getCurrentTime() {
+		Date dt = new Date();
+		SimpleDateFormat matter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String CurrentTime = matter1.format(dt);
+		return CurrentTime;
+	}
+
+	private MongoCredential getCredential(Context context) {
+		String user = context.getString(USER);
+		String database = context.getString(DATABASE);
+		String password = context.getString(PASSWORD);
+		return MongoCredential.createCredential(user, database, password.toCharArray());
+	}
+
+    */
+
+
+
 }

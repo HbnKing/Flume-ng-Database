@@ -11,8 +11,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hbn</groupId>
-    <artifactId>Flume-SqlSource</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>Flume-Externals</artifactId>
+    <version>1.0.0</version>
+    <modules>
+        <module>RDB</module>
+        <module>Mysql</module>
+    </modules>
     <packaging>pom</packaging>
 
     <name>Flume SqlSource</name>
@@ -101,9 +105,89 @@
         <xerces.version>2.9.1</xerces.version>
         <wiremock.version>1.53</wiremock.version>
         <zookeeper.version>3.4.5</zookeeper.version>
+        <!--修改 各个环境驱动版本的位置 -->
+        <mysql.driver.version>6.0.5</mysql.driver.version>
+        <flume.version>1.9.0</flume.version>
+        <fastjson.version>1.2.49</fastjson.version>
+        <!--mongodb 一套东西 -->
     </properties>
 
+    <dependencies>
+        <!--flume  通用包 -->
+        <dependency>
+            <groupId>org.apache.flume</groupId>
+            <artifactId>flume-ng-core</artifactId>
+            <version>${flume.version}</version>
+            <scope>provided</scope>
+
+        </dependency>
+
+       <!-- <dependency>
+            <groupId>org.apache.flume</groupId>
+            <artifactId>flume-ng-sdk</artifactId>
+            <version>${flume.version}</version>
+        </dependency>-->
+
+        <!-- 通用工具 包  -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.49</version>
+
+        </dependency>
+        <!-- 日志 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+
+        </dependency>
+
+       <!-- <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.5</version>
+        </dependency>-->
+       <!-- <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.3.10.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>4.3.10.Final</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.6.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.6.2</version>
+            <scope>test</scope>
+        </dependency>
 
 
-    
+    </dependencies>
+
 </project>

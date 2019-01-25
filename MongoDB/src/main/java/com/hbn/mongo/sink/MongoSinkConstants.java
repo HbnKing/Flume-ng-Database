@@ -1,4 +1,4 @@
-package com.hbn.mongo.source;
+package com.hbn.mongo.sink;
 
 /**
  * 配置类

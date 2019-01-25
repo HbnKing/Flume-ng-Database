@@ -1,22 +1,42 @@
+/*
 package com.hbn.mongo.sink;
 
+import com.hbn.common.MongoConfig;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import org.apache.flume.Context;
+import org.apache.flume.Event;
+import org.apache.flume.EventDeliveryException;
 import org.apache.flume.conf.Configurable;
+import org.apache.flume.instrumentation.SinkCounter;
 import org.apache.flume.sink.AbstractSink;
+import org.bson.Document;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeParser;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
+*/
 /**
  * @author wangheng
  * @create 2019-01-11 下午11:35
  * @desc
- **/
+ **//*
 
 
 
-public class MongoSinkwh<AbstractSink> extends AbstractSink implements Configurable {
+
+public class MongoSinkwh extends AbstractSink implements Configurable {
     private static Logger logger = LoggerFactory.getLogger(MongoSinkwh.class);
 
     private static DateTimeParser[] parsers = {
@@ -30,7 +50,6 @@ public class MongoSinkwh<AbstractSink> extends AbstractSink implements Configura
             DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssz").getParser(),
             DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSz").getParser(),
     };
-    public static DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
 
     public static final String HOST = "host";
     public static final String PORT = "port";
@@ -82,53 +101,38 @@ public class MongoSinkwh<AbstractSink> extends AbstractSink implements Configura
     private String wrapField;
     private String timestampField;
     private final Map<String, String> extraInfos = new ConcurrentHashMap<String, String>();
+
+    private MongoConfig  mongoConfig ;
+    private MongoClient  mongoClient ;
+    private SinkCounter sinkCounter;
+
+
+    private MongoCollection<Document> collection ;
+
     @Override
     public void configure(Context context) {
-        setName(NAME_PREFIX + counter.getAndIncrement());
 
-        host = context.getString(HOST, DEFAULT_HOST);
-        port = context.getInteger(PORT, DEFAULT_PORT);
-        authentication_enabled = context.getBoolean(AUTHENTICATION_ENABLED, DEFAULT_AUTHENTICATION_ENABLED);
-        if (authentication_enabled) {
-            username = context.getString(USERNAME);
-            password = context.getString(PASSWORD);
-        } else {
-            username = "";
-            password = "";
+        try {
+            mongoConfig = MongoConfig.getMongoConfig();
+            mongoClient = MongoConfig.getMongoClient();
+            collectionName = MongoConfig.getTABLENAME();
+            dbName = MongoConfig.getDATABASE();
+            collection =  mongoClient.getDatabase(dbName).getCollection(collectionName);
+        }catch (Exception e){
+            logger.error(e.toString());
         }
-        model = CollectionModel.valueOf(context.getString(MODEL, CollectionModel.SINGLE.name()));
-        dbName = context.getString(DB_NAME, DEFAULT_DB);
-        collectionName = context.getString(COLLECTION, DEFAULT_COLLECTION);
-        batchSize = context.getInteger(BATCH_SIZE, DEFAULT_BATCH);
-        autoWrap = context.getBoolean(AUTO_WRAP, DEFAULT_AUTO_WRAP);
-        wrapField = context.getString(WRAP_FIELD, DEFAULT_WRAP_FIELD);
-        timestampField = context.getString(TIMESTAMP_FIELD, DEFAULT_TIMESTAMP_FIELD);
-        extraInfos.putAll(context.getSubProperties(EXTRA_FIELDS_PREFIX));
-        logger.info("MongoSink {} context { host:{}, port:{}, authentication_enabled:{}, username:{}, password:{}, model:{}, dbName:{}, collectionName:{}, batch: {}, autoWrap: {}, wrapField: {}, timestampField: {} }",
-                new Object[]{getName(), host, port, authentication_enabled, username, password, model, dbName, collectionName, batchSize, autoWrap, wrapField, timestampField});
+
     }
 
     @Override
     public synchronized void start() {
         logger.info("Starting {}...", getName());
-        try {
-            mongo = new Mongo(host, port);
-            db = mongo.getDB(dbName);
-        } catch (UnknownHostException e) {
-            logger.error("Can't connect to mongoDB", e);
-            return;
-        }
-        if (authentication_enabled) {
-            boolean result = db.authenticate(username, password.toCharArray());
-            if (result) {
-                logger.info("Authentication attempt successful.");
-            } else {
-                logger.error("CRITICAL FAILURE: Unable to authenticate. Check username and Password, or use another unauthenticated DB. Not starting MongoDB sink.\n");
-                return;
-            }
-        }
+
         super.start();
         logger.info("Started {}.", getName());
+
+        sinkCounter.incrementConnectionCreatedCount();
+        sinkCounter.start();
     }
 
     @Override
@@ -407,7 +411,9 @@ public class MongoSinkwh<AbstractSink> extends AbstractSink implements Configura
         return documents;
     }
 
+
+
     public enum CollectionModel {
         DYNAMIC, SINGLE
     }
-}
+}*/

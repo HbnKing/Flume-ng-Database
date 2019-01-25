@@ -9,23 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>MongoDB</artifactId>
-
-
+    <artifactId>RDB</artifactId>
+    <properties>
+        <mysql.driver.version>6.0.5</mysql.driver.version>
+    </properties>
     <dependencies>
-    <!--mongodb  的-->
-    <dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>mongodb-driver</artifactId>
-        <version>3.9.1</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>bson</artifactId>
-        <version>3.9.1</version>
-    </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.driver.version}</version>
+        </dependency>
     </dependencies>
-
 
 </project>

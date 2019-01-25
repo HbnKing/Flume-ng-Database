@@ -1,0 +1,5 @@
+2019-01-25 15:21:19  [ main:0 ] - [ INFO ]  started 
+2019-01-25 15:21:19  [ main:1 ] - [ INFO ]  内容是  111 --
+2019-01-25 15:21:19  [ main:4 ] - [ INFO ]  propertiesPath:  ./src
+2019-01-25 15:21:19  [ main:11 ] - [ INFO ]  read  properties ok ！
+2019-01-25 15:21:19  [ main:11 ] - [ INFO ]  currentIndex  is 12

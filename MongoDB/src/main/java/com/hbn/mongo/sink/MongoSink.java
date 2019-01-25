@@ -32,7 +32,7 @@ public class MongoSink extends AbstractSink implements Configurable {
 
 	private static final Logger logger = LoggerFactory.getLogger(MongoSink.class);
 
-	private MongoClient client;
+	protected MongoClient client;
 	private MongoCollection<Document> collection;
 	private List<ServerAddress> seeds;
 	private MongoCredential credential;
@@ -68,8 +68,22 @@ public class MongoSink extends AbstractSink implements Configurable {
 				//TODO 根据不同的JSON 指定severId 插入不同的数据库
 				logger.info(jsonEvent);
 
-				Document sentEvent = Document.parse(jsonEvent);
-				System.out.println(sentEvent);
+				//这里转化 可能会有异常  因为  给定的数据如果不是 json 格式 name转换就会有问题
+				/**
+				 * 如果一次转换不成功 ，继续转换也不会成功的 。
+				 * 因为是格式问题
+				 * 所以 直接 log
+				 *
+				 */
+				Document sentEvent = null ;
+
+				try {
+					sentEvent= Document.parse(jsonEvent);
+					System.out.println(sentEvent);
+				}catch(Exception e){
+					logger.error("can't  parse  event  to  document  " ,e.toString(),event);
+
+				}
 
 				documents.add(sentEvent);
 			}
@@ -85,6 +99,7 @@ public class MongoSink extends AbstractSink implements Configurable {
 				}
 				sinkCounter.addToEventDrainAttemptCount(count);
 				collection.insertMany(documents);
+
 			}
 			transaction.commit();
 			sinkCounter.addToEventDrainSuccessCount(count);
@@ -157,8 +172,6 @@ public class MongoSink extends AbstractSink implements Configurable {
 			if(mongoConfig == null){
 				mongoConfig = MongoConfig.getMongoConfig(context);
 			}
-
-
 			collectionName = mongoConfig.getTABLENAME();
 			databaseName = mongoConfig.getDATABASE();
 			batchSize = mongoConfig.getBatchSize();
@@ -168,35 +181,5 @@ public class MongoSink extends AbstractSink implements Configurable {
 
 	}
 
-	private List<ServerAddress> getSeeds(String seedsString) {
-		List<ServerAddress> seeds = new LinkedList<ServerAddress>();
-		String[] seedStrings = StringUtils.deleteWhitespace(seedsString).split(",");
-		for (String seed : seedStrings) {
-			String[] hostAndPort = seed.split(":");
-			String host = hostAndPort[0];
-			int port;
-			if (hostAndPort.length == 2) {
-				port = Integer.parseInt(hostAndPort[1]);
-			} else {
-				port = 27017;
-			}
-			seeds.add(new ServerAddress(host, port));
-		}
 
-		return seeds;
-	}
-
-	private String getCurrentTime() {
-		Date dt = new Date();
-		SimpleDateFormat matter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String CurrentTime = matter1.format(dt);
-		return CurrentTime;
-	}
-
-	private MongoCredential getCredential(Context context) {
-		String user = context.getString(USER);
-		String database = context.getString(DATABASE);
-		String password = context.getString(PASSWORD);
-		return MongoCredential.createCredential(user, database, password.toCharArray());
-	}
 }
