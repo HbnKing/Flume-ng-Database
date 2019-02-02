@@ -15,6 +15,8 @@ import java.sql.*;
  * query 请求
  * 关闭连接 释放 资源等
  *
+ * 本类 只对sqlsourcehelper 内部对象
+ *
  **/
 public class DriverQuery {
 
@@ -31,7 +33,7 @@ public class DriverQuery {
     private   Statement statement = null ;
 
     private  RDBconfig  rdBconfig=null ;
-    protected   void init(RDBconfig  RDBconfig){
+    public    void init(RDBconfig  RDBconfig){
         if(RDBconfig==null){
             logger.error(" init  failed   driver message  has some  error " );
         }else {
@@ -43,7 +45,7 @@ public class DriverQuery {
 
 
     }
-    protected  void createConnection(){
+    public  void createConnection(){
         logger.info("start create connection");
         try {
             //反射方式获取驱动名称
@@ -60,7 +62,7 @@ public class DriverQuery {
     }
 
 
-    protected   ResultSet executeQuery(String  sql) {
+    public   ResultSet executeQuery(String  sql) {
         ResultSet resultSet = null;
         logger.info(sql);
         //String  sql = "select * from  class";
@@ -74,7 +76,7 @@ public class DriverQuery {
     }
 
 
-    protected  void stop(){
+    public  void stop(){
         rdBconfig = null ;
         if(statement !=null){
             try {

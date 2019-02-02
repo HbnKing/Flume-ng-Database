@@ -12,10 +12,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hbn</groupId>
     <artifactId>Flume-Externals</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <modules>
         <module>RDB</module>
-        <module>Mysql</module>
+        <module>MongoDB</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -112,82 +112,53 @@
         <!--mongodb 一套东西 -->
     </properties>
 
+    <dependencyManagement>
     <dependencies>
-        <!--flume  通用包 -->
+        <!--flume  核心包 -->
         <dependency>
             <groupId>org.apache.flume</groupId>
             <artifactId>flume-ng-core</artifactId>
             <version>${flume.version}</version>
             <scope>provided</scope>
-
         </dependency>
-
-       <!-- <dependency>
-            <groupId>org.apache.flume</groupId>
-            <artifactId>flume-ng-sdk</artifactId>
-            <version>${flume.version}</version>
-        </dependency>-->
 
         <!-- 通用工具 包  -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.49</version>
-
         </dependency>
+
         <!-- 日志 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
-
         </dependency>
-
-       <!-- <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>3.5</version>
-        </dependency>-->
-       <!-- <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.3.10.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>4.3.10.Final</version>
-        </dependency>-->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.2</version>
-            <scope>test</scope>
-        </dependency>
-
-
     </dependencies>
-
+    </dependencyManagement>
 </project>

@@ -1,7 +1,6 @@
 package com.hbn.rdb.source;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.SQLSourceHelper;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 
@@ -29,7 +27,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     private  static  volatile  long  currentIndex  = Long.MIN_VALUE ;
 
     private static final Logger logger = LoggerFactory.getLogger(SQLSource.class);
-    protected SQLSourceHelper sqlSourceHelper;
+    private SQLSourceHelper sqlSourceHelper;
 
 
     //private static AtomicLong resultsize = new AtomicLong(0);
@@ -51,7 +49,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     @Override
     public void configure(Context context) {
 
-        logger.getName();
+        logger.info("started configure() ");
 
         logger.info("Reading and processing configuration values for source " + getName());
 		
@@ -100,12 +98,13 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 //一次完成之后是该行生成的一个的  一个json 文件
                 event.setBody(jsonObj.toString().getBytes(Charset.forName("UTF-8")));
 
-                logger.info(jsonObj.toJSONString());
+                //logger.info(jsonObj.toJSONString());
                 logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
 
 
 
                 //单个发送  或者批次发送？这个可以在考量一下
+                //以及 增量算法 都还有优化空间
                 this.getChannelProcessor().processEvent(event);
 
                 // Store the Event into this Source's associated Channel(s)

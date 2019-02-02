@@ -11,8 +11,8 @@ package com.hbn.rdb.common;
 public class DefaultConfig {
     private DefaultConfig(){}
     //中间文件 保存位置
-    public static final String FILEPATH = "statusfilepath" ;
-    public static final String FILENAME = "statusfilename" ;
+    public static final String FILEPATH = "filepath" ;
+    public static final String FILENAME = "filename" ;
     public static final String DEFAULT_FILEPATH = "/var/lib/flume";
     //中间文件名
     public static final String DEFAULT_FILENAME = "SourceName";
