@@ -25,6 +25,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
     //currentIndex  保存当前最大值
     private  static  volatile  long  currentIndex  = Long.MIN_VALUE ;
+    private static volatile String autoIncrementField = null ;
 
     private static final Logger logger = LoggerFactory.getLogger(SQLSource.class);
     private SQLSourceHelper sqlSourceHelper;
@@ -58,6 +59,8 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
     	//driverclass = context.getString("driver_class") ;
         currentIndex = sqlSourceHelper.getCurrentIndex();
+
+        autoIncrementField = sqlSourceHelper.getautoIncrementField();
 
     	/* Initialize metric counters */
 
@@ -120,8 +123,15 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                     //不包含自增值
                     resultsize.incrementAndGet();
                 }*/
+                //currentIndex++;
+                try {
+                    currentIndex = Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
+                }catch (Exception e){
+                    currentIndex++;
+                }
 
-                currentIndex++;
+
+
             }
             //currentIndex = currentIndex
             //currentIndex = Math.max(currentIndex,currentIndex+resultsize.longValue());

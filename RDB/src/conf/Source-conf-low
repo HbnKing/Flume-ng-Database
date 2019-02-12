@@ -12,10 +12,10 @@ a1.sources.r1.password = hive
 a1.sources.r1.driverclass= com.mysql.cj.jdbc.Driver
 
 #表名  自增字段  起始位置 还有查询列名(队列 请使用sql语句分割符分开 )
-a1.sources.r1.table = class
+a1.sources.r1.table = classname
 a1.sources.r1.autoincrementfield = id
 a1.sources.r1.begin = 2
-# 改值 不配置 会 取 所有列名
+# 列名 该值 不配置 会 取 所有列名  请将主键 包含在查询结果中
 a1.sources.r1.columnstoselect = id,age,sex
 
 
@@ -24,7 +24,7 @@ a1.sources.r1.columnstoselect = id,age,sex
 #a1.sources.filepath = /var/log/flume1
 #a1.sources.filename = sqlSource.status
 
-# Custom query  自定义 语句
+# Custom query  自定义 语句  需要配置 一
 a1.sources.customquery = select * from table  where id > $@$
 a1.sources.r1.begin = 2
 
