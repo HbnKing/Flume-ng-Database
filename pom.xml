@@ -11,7 +11,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hbn</groupId>
-    <artifactId>Flume-Externals</artifactId>
+    <artifactId>Flume-ng-Database</artifactId>
     <version>0.0.1</version>
     <modules>
         <module>RDB</module>
@@ -19,7 +19,27 @@
     </modules>
     <packaging>pom</packaging>
 
-    <name>Flume SqlSource</name>
+    <description>This project is used for flume-ng to import data from SQL databases.</description>
+
+    <url>https://github.com/HbnKing/Flume-Externals</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+    <developer>
+        <name>Wang Heng</name>
+        <email>hbn.king@gmail.com</email>
+        <organization>hbn</organization>
+        <organizationUrl></organizationUrl>
+    </developer>
+    </developers>
+
+
 
     <properties>
         <!-- Set default encoding to UTF-8 to remove maven complaints -->
@@ -126,7 +146,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.49</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <!-- 日志 -->

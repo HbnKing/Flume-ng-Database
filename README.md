@@ -18,7 +18,7 @@ RDB  常见关系型数据库（mysql  oracle  pg）
 | 数据源  | source | sink |版本 |
 | ------ | ------ | ------ | ------ |
 | RDB| S |  X| 0.0.1 |
-| mongo | X |  S|  0.0.1|
+
 
 
 ## 使用方式 
@@ -30,8 +30,24 @@ RDB  常见关系型数据库（mysql  oracle  pg）
 2主键或者某一字段的增量  
 3字段修改后的标记同步  
 
+##  如何使用 
+
+```
+cd  RDB 
+$ mvn package
+$ cp RDB-O.O.1.jar $FLUME_HOME/lib
+
+```
+其他 
+需要 alibab  fastjson-1.2.49  数据库驱动
+
+
 
 
 ## 配置文件样例
+RDB 配置文件 [详见](./RDB/src/conf/Source-conf-low)
+
+
+## 必须配置 
 
 ## 常见问题 
