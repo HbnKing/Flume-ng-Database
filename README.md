@@ -51,3 +51,6 @@ RDB 配置文件 [详见](./RDB/src/conf/Source-conf-low)
 ## 必须配置 
 
 ## 常见问题 
+
+## 鸣谢
+感谢 大佬们的付出 思想源于[github](https://github.com/keedio/flume-ng-sql-source) 
