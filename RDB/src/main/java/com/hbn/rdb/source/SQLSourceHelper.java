@@ -27,7 +27,8 @@ public class SQLSourceHelper {
   //private static String dbname = null ;
 
   //个性化sql部分
-  private static String customquery = null ;
+  
+  private static String customerquery = null ;
 
   private static long begin = 0l;
   //  select id,field   from  table name  where  id  >=begin ;
@@ -89,9 +90,9 @@ public class SQLSourceHelper {
     logger.info("begin  is  {}",begin );
 
     //自己写的sql
-    customquery = context.getString(DefaultConfig.CUSTOMQUERY);
+    customerquery = context.getString(DefaultConfig.CUSTOMQUERY);
 
-    logger.info("customquery  is  {}" ,customquery);
+    logger.info("customerquery  is  {}" ,customerquery);
 
     //多个参数配的sql
     table = context.getString(DefaultConfig.TABLE);
@@ -136,7 +137,7 @@ public class SQLSourceHelper {
     fileName = context.getString(DefaultConfig.FILENAME,DefaultConfig.DEFAULT_FILENAME);
 
     logger.info("filePath is  {}",filePath);
-    logger.info("fileName is  {}",filePath);
+    logger.info("fileName is  {}",fileName);
 
 
     //更新 currentIndex
@@ -148,23 +149,23 @@ public class SQLSourceHelper {
 
   public String buildQuery() {
 
-    if (customquery == null) {
+    if (customerquery == null) {
       // 如果 customerQuery 为null，就以 offsest 作为 id
       return "SELECT " + columnsToSelect + " FROM " + table +" where " +autoIncrementField + " > " +currentIndex ;
     } else {
-      //如果 customQuery 不为 null，那么就要将其最后已存在的 offset 替换掉新查询出的 offset（！！！）
+      //如果 customerquery 不为 null，那么就要将其最后已存在的 offset 替换掉新查询出的 offset（！！！）
       //
-      if (customquery.contains("$@$")) {
+      if (customerquery.contains("$@$")) {
         //直接修改  返回行新的 sql 语句
-        return customquery.replace("$@$", String.valueOf(currentIndex));
+        return customerquery.replace("$@$", String.valueOf(currentIndex));
       } else {
         //如果没有设置
         // currentIndex  应该为 begin  默认值 Long.MIN_VALUE
         //还可以在修改一下
         /*if(currentIndex.equals(Long.MIN_VALUE)){
-          return customquery = customquery.substring(0,customquery.indexOf(">")+1)+currentIndex;
-        }else return customquery ;*/
-        return customquery ;
+          return customerquery = customerquery.substring(0,customerquery.indexOf(">")+1)+currentIndex;
+        }else return customerquery ;*/
+        return customerquery ;
 
       }
     }
@@ -217,7 +218,7 @@ public class SQLSourceHelper {
     if(autoIncrementField ==null){
       return false ;
     //包含
-    }else if(customquery!=null && (customquery.contains("*")||customquery.contains(autoIncrementField))){
+    }else if(customerquery!=null && (customerquery.contains("*")||customerquery.contains(autoIncrementField))){
       return true ;
 
     }else if(columnsToSelect!=null && (columnsToSelect.contains("*")||columnsToSelect.contains(autoIncrementField))){
