@@ -8,14 +8,8 @@ import org.apache.flume.source.AbstractSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 
@@ -29,9 +23,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     private static final Logger logger = LoggerFactory.getLogger(SQLSource.class);
     private SQLSourceHelper sqlSourceHelper;
 
-
-    //private static AtomicLong resultsize = new AtomicLong(0);
-
     @Override
     public long getBackOffSleepIncrement() {
         return 10;
@@ -39,7 +30,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
     @Override
     public long getMaxBackOffSleepInterval() {
-        return 100;
+        return 10;
     }
 
 
@@ -80,21 +71,23 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();
 
+            Event event = null ;
+            JSONObject jsonObj = null ;
             while (result.next()) {
 
                 // Receive new data
-                Event event = new SimpleEvent();
-                JSONObject jsonObj = new JSONObject();
+                event = new SimpleEvent();
+                jsonObj = new JSONObject();
 
                 // 遍历每一列 的值 获取 出来
 
                 for (int i = 1; i <= columnCount; i++) {
 
                     String columnName = metaData.getColumnLabel(i);
+
                     String value = result.getString(columnName);
                     //将 columnName  和 value  放置在 json  中
                     jsonObj.put(columnName, value);
-
                 }
 
                 //一次完成之后是该行生成的一个的  一个json 文件
@@ -102,7 +95,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
                 //logger.info(jsonObj.toJSONString());
                 logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
-
 
 
                 //单个发送  或者批次发送？这个可以在考量一下
@@ -149,6 +141,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             sqlSourceHelper.setCurrentIndex(currentIndex);
 
         }
+
         return status;
     }
  
@@ -180,35 +173,5 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
     }
     
-    private class ChannelWriter extends Writer{
-        private List<Event> events = new ArrayList<>();
 
-        @Override
-        public void write(char[] cbuf, int off, int len) throws IOException {
-            Event event = new SimpleEvent();
-            
-            String s = new String(cbuf);
-            //event.setBody(s.substring(off, len-1).getBytes(Charset.forName(sqlSourceHelper.getDefaultCharsetResultSet())));
-            
-            Map<String, String> headers;
-            headers = new HashMap<String, String>();
-			headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-			event.setHeaders(headers);
-			
-            events.add(event);
-
-            flush();
-        }
-
-        @Override
-        public void flush() throws IOException {
-            getChannelProcessor().processEventBatch(events);
-            events.clear();
-        }
-
-        @Override
-        public void close() throws IOException {
-            flush();
-        }
-    }
 }

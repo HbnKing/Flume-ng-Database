@@ -31,6 +31,7 @@ public class DriverQuery {
 
     private   Connection connection = null ;
     private   Statement statement = null ;
+    private ResultSet resultSet = null;
 
     private  RDBconfig  rdBconfig=null ;
     public    void init(RDBconfig  RDBconfig){
@@ -63,7 +64,7 @@ public class DriverQuery {
 
 
     public   ResultSet executeQuery(String  sql) {
-        ResultSet resultSet = null;
+        resultSet = null;
         logger.info(sql);
         //String  sql = "select * from  class";
         try {
