@@ -149,8 +149,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             sqlSourceHelper.setCurrentIndex(currentIndex);
 
         }
-
-
         return status;
     }
  
