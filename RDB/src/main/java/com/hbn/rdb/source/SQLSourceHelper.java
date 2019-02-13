@@ -1,5 +1,9 @@
-package com.hbn.rdb.common;
+package com.hbn.rdb.source;
 
+import com.hbn.rdb.common.DefaultConfig;
+import com.hbn.rdb.common.DriverQuery;
+import com.hbn.rdb.common.FileStatus;
+import com.hbn.rdb.common.RDBconfig;
 import org.apache.flume.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +66,7 @@ public class SQLSourceHelper {
 
   //每一个sqlsource 内设置一个内部对象 保存该类的 数据库级别的连接信息
 
-  RDBconfig  RDBconfig = new RDBconfig();
+  com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
 
   DriverQuery driverQuery = new DriverQuery() ;
 

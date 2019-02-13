@@ -1,7 +1,6 @@
 package com.hbn.rdb.source;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hbn.rdb.common.SQLSourceHelper;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.SimpleEvent;
@@ -111,7 +110,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 this.getChannelProcessor().processEvent(event);
 
                 // Store the Event into this Source's associated Channel(s)
-                getChannelProcessor().processEvent(event);
+                //getChannelProcessor().processEvent(event);
 
 
 

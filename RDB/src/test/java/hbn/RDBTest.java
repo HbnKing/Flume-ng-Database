@@ -2,7 +2,7 @@ package hbn;
 
 import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.RDBconfig;
-import com.hbn.rdb.common.SQLSourceHelper;
+import com.hbn.rdb.source.SQLSourceHelper;
 import org.apache.flume.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
