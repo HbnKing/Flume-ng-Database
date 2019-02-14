@@ -170,6 +170,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
          */
         sqlSourceHelper.updateStatusFile(currentIndex);
         sqlSourceHelper.stop();
+        super.stop();
 
     }
     

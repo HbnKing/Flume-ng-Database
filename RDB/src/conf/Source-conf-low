@@ -17,7 +17,7 @@ a1.sources.r1.autoincrementfield = id
 a1.sources.r1.begin = 2
 # 列名 该值 不配置 会 取 所有列名  请将主键 包含在查询结果中
 a1.sources.r1.columnstoselect = id,age,sex
-
+#a1.sources.r1.columnstoselect = id
 
 # Status file is used to save last readed row
 # 中间状态保存

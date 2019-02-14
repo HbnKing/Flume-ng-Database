@@ -57,12 +57,17 @@ public class DefaultConfig {
     public static final String COLUMNS_TO_SELECT = "columnstoselect";
     public static final String DEFAULT_COLUMNS_TO_SELECT = "*";
     public static final String TABLE = "table";
-    public static final String DefaultTABLE = "defaulttable";
+    public static final String DefaultTABLE = "table";
 
     public static final String AUTOINCREMENTFIELD = "autoincrementfield";
     //起始值  字段名 和 默认值
     public static final String BEGINNING = "begin";
-    public static final Long DEFAULT_BEGINNING = Long.MIN_VALUE ;
+
+    //默认起点
+    //数值类型的默认起点
+    public static final int DEFAULT_BEGINNING = 0 ;
+    //时间类型的默认起点
+
 
 
 

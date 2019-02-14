@@ -225,14 +225,12 @@ public class SQLSourceHelper {
       return true ;
     }else return false;
 
-
   }
 
 
   public void stop(){
     driverQuery.stop();
     RDBconfig = null ;
-
   }
 
 
