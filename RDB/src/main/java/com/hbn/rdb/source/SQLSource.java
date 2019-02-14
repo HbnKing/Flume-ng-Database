@@ -94,7 +94,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 event.setBody(jsonObj.toString().getBytes(Charset.forName("UTF-8")));
 
                 //logger.info(jsonObj.toJSONString());
-                logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
+                //logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
 
 
                 //单个发送  或者批次发送？这个可以在考量一下
