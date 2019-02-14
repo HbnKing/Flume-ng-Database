@@ -1,5 +1,6 @@
 package hbn;
 
+import com.google.gson.JsonObject;
 import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.RDBconfig;
 import com.hbn.rdb.source.SQLSourceHelper;
@@ -19,6 +20,9 @@ public class RDBTest {
 
     private static Logger  logger = LoggerFactory.getLogger(RDBTest.class);
     public static void main(String[] args) throws SQLException {
+
+        JsonObject  jsonObject = new JsonObject();
+        System.out.println(""+jsonObject.get("key"));
         Context  context = new Context();
         getConnection();
         logger.info("--------");

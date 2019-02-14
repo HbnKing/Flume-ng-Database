@@ -25,12 +25,12 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
     @Override
     public long getBackOffSleepIncrement() {
-        return 10;
+        return 100;
     }
 
     @Override
     public long getMaxBackOffSleepInterval() {
-        return 10;
+        return 1000;
     }
 
 
@@ -74,7 +74,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             Event event = null ;
             JSONObject jsonObj = null ;
             while (result.next()) {
-
                 // Receive new data
                 event = new SimpleEvent();
                 jsonObj = new JSONObject();
@@ -82,9 +81,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 // 遍历每一列 的值 获取 出来
 
                 for (int i = 1; i <= columnCount; i++) {
-
                     String columnName = metaData.getColumnLabel(i);
-
                     String value = result.getString(columnName);
                     //将 columnName  和 value  放置在 json  中
                     jsonObj.put(columnName, value);
@@ -96,32 +93,12 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 //logger.info(jsonObj.toJSONString());
                 //logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
 
-
                 //单个发送  或者批次发送？这个可以在考量一下
                 //以及 增量算法 都还有优化空间
                 this.getChannelProcessor().processEvent(event);
 
-                // Store the Event into this Source's associated Channel(s)
-                //getChannelProcessor().processEvent(event);
-
-
-
-                /*if(false){
-                    //long  tmpIdValue = jsonObj.getLong(fieldName);
-                    // currentIndex = Math.max(currentIndex,tmpIdValue);
-
-                }else {
-                    //不包含自增值
-                    resultsize.incrementAndGet();
-                }*/
-                //currentIndex++;
-                try {
-                    currentIndex = Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
-                }catch (Exception e){
-                    currentIndex++;
-                }
-
-
+                //修改当前指针使其自增
+                currentIndex = jsonObj.getLong(autoIncrementField) ==null ? currentIndex++ : Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
 
             }
             //currentIndex = currentIndex
@@ -129,9 +106,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             status = Status.READY;
         } catch (Throwable t) {
             // Log exception, handle individual exceptions as needed
-
             status = Status.BACKOFF;
-
             // re-throw all Errors
             if (t instanceof Error) {
                 throw (Error) t;
@@ -139,7 +114,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         } finally {
             //修改 index  使其自增
             sqlSourceHelper.setCurrentIndex(currentIndex);
-
         }
 
         return status;
