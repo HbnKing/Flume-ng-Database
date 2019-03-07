@@ -1,10 +1,7 @@
 package hbn;
 
-import com.google.gson.JsonObject;
 import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.RDBconfig;
-import com.hbn.rdb.source.SQLSourceHelper;
-import org.apache.flume.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,23 +10,18 @@ import java.sql.SQLException;
 
 /**
  * @author wangheng
- * @create 2019-02-02 上午10:54
+ * @create 2019-03-07 下午1:09
  * @desc
  **/
-public class RDBTest {
+public class JdbcConnectionTest {
 
-    private static Logger  logger = LoggerFactory.getLogger(RDBTest.class);
+    private static Logger logger = LoggerFactory.getLogger(JdbcConnectionTest.class);
+
     public static void main(String[] args) throws SQLException {
+        JdbcConnectionTest.getConnection();
 
-        JsonObject  jsonObject = new JsonObject();
-        System.out.println(""+jsonObject.get("key"));
-        Context  context = new Context();
-        getConnection();
-        logger.info("--------");
-        SQLSourceHelper  sqlSourceHelper = new SQLSourceHelper(context,"name");
 
     }
-
 
     public static void  getConnection() throws SQLException {
         logger.info("started ");

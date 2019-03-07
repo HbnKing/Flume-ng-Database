@@ -64,18 +64,18 @@ public class DriverQuery {
 
 
     public   ResultSet executeQuery(String  sql) {
-
-        //logger.info(sql);
         //String  sql = "select * from  class";
+
+        ResultSet  result = null;
         try {
-            resultSet.close();
-            resultSet = null;
             resultSet = statement.executeQuery(sql);
         } catch (SQLException e) {
             logger.error("  query failed and the query is  {}  ,the  error  is  {}",sql ,e);
+        }finally {
+            result = resultSet ;
+            resultSet = null ;
         }
-
-        return resultSet ;
+        return result ;
     }
 
 
