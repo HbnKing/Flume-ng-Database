@@ -39,7 +39,7 @@ $ cp RDB-O.O.1.jar $FLUME_HOME/lib
 
 ```
 其他 
-需要 alibab  fastjson-1.2.49  数据库驱动
+需要 alibaba fastjson-1.2.49  数据库驱动
 
 
 

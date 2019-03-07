@@ -16,6 +16,7 @@
     <modules>
         <module>RDB</module>
         <module>MongoDB</module>
+        <module>Mysql</module>
     </modules>
     <packaging>pom</packaging>
 
