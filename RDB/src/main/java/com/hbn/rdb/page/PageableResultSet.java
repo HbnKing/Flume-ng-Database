@@ -27,6 +27,8 @@ package com.hbn.rdb.page;
  **/
 
 
+import com.hbn.rdb.common.DriverQuery;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -55,8 +57,6 @@ public class PageableResultSet implements Pageable {
         this.rs=rs;
 
     }
-
-
 
     @Override
     public int getCurPage() {
@@ -132,10 +132,7 @@ public class PageableResultSet implements Pageable {
             this.pageSize=pageSize;
             curPage=1;
         }
-
-
     }
-
 
 
     @Override

@@ -4,11 +4,13 @@ import com.hbn.rdb.common.DefaultConfig;
 import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.FileStatus;
 import com.hbn.rdb.common.RDBconfig;
+import com.hbn.rdb.page.PageableResultSet;
 import org.apache.flume.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,8 +38,6 @@ public class SQLSourceHelper {
   private static String columnsToSelect = null ;
   private static String table = null ;
   private static String autoIncrementField = null ;
-
-
 
   // 生成的sql
   private static String query = null ;
@@ -70,6 +70,12 @@ public class SQLSourceHelper {
   com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
 
   DriverQuery driverQuery = new DriverQuery() ;
+
+  PageableResultSet  pageableResultSet = null ;
+
+
+
+  private static int batchsize;
 
   /**
    * Builds an SQLSourceHelper containing the configuration parameters and
@@ -145,6 +151,11 @@ public class SQLSourceHelper {
     currentIndex = Math.max(begin ,getCurrentIndexStatusFile());
     logger.info("Index  started  from  {}" ,currentIndex);
 
+    //  分页信息
+    batchsize = context.getInteger(DefaultConfig.BATCH_SIZE ,DefaultConfig.DEFAULT_BATCH_SIZE);
+
+
+
   }
 
   public String buildQuery() {
@@ -209,6 +220,14 @@ public class SQLSourceHelper {
   }
 
 
+  public int getBatchsize() {
+    return batchsize;
+  }
+
+  public void setBatchsize(int batchsize) {
+    SQLSourceHelper.batchsize = batchsize;
+  }
+
   public String getautoIncrementField(){
     return autoIncrementField ;
   }
@@ -241,7 +260,84 @@ public class SQLSourceHelper {
 
   public ResultSet executeQuery(){
     String sql  = buildQuery();
+
     return driverQuery.executeQuery(sql);
+  }
+
+
+
+
+  private PageableResultSet getPageableResultSet() throws SQLException {
+    // 第一次请求
+    if(pageableResultSet==null){
+      pageableResultSet = new PageableResultSet(executeQuery());
+      pageableResultSet.setPageSize(batchsize);
+    }
+    return pageableResultSet;
 
   }
+
+
+  private void closePageableResultSet() {
+    try {
+      pageableResultSet.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }finally {
+      pageableResultSet = null ;
+    }
+
+  }
+
+
+
+
+  //当前页面
+  private static  int  curPage = 1 ;
+
+  /**
+   * 获取初始页面
+   * 1.当前页
+   * 2.当前页 用完 用下一页
+   * 3.最后一页用完 重新生成 一本书
+   *
+   */
+  public PageableResultSet getNextPageableResultSet() throws SQLException {
+
+      // 没有页面 的时候
+      if(pageableResultSet == null){
+        getPageableResultSet();
+        pageableResultSet.gotoPage(curPage);
+        curPage++;
+      }else if(curPage <=pageableResultSet.getPageCount()){
+        pageableResultSet.gotoPage(curPage);
+        curPage++;
+
+      }else {
+        closePageableResultSet();
+        curPage = 1 ;
+        getNextPageableResultSet();
+      }
+
+      return pageableResultSet ;
+
+    }
+
+
+  /**
+   * 重置当前页面
+   */
+  public void resetCurPage(){
+
+    if(curPage <=1){
+      curPage = 1 ;
+    }else {
+      curPage -=1 ;
+    }
+
+  }
+
+
+
 }
+

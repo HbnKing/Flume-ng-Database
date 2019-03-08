@@ -7,6 +7,7 @@ package com.hbn.rdb.common;
  * 共用默认值
  * 1属性名称
  * 2属性默认值
+ *
  **/
 public class DefaultConfig {
     private DefaultConfig(){}
@@ -14,12 +15,16 @@ public class DefaultConfig {
     public static final String FILEPATH = "filepath" ;
     public static final String FILENAME = "filename" ;
     public static final String DEFAULT_FILEPATH = "/var/lib/flume";
-    //中间文件名
     public static final String DEFAULT_FILENAME = "SourceName";
 
     public static final int DEFAULT_QUERY_DELAY = 10000;
+    public static final String BATCH_SIZE="batchsize";
     public static final int DEFAULT_BATCH_SIZE = 100;
     public static final int DEFAULT_MAX_ROWS = 10000;
+
+
+
+
     public static final String DEFAULT_INCREMENTAL_VALUE = "0";
     //默认分隔符
     public static final String DEFAULT_DELIMITER_ENTRY = ",";
@@ -42,12 +47,9 @@ public class DefaultConfig {
     //获取 连接的信息
 
     public static  final String URL = "connectionurl";
-
     public static final String DRIVER = "driverclass";
-
     public static final String USER = "user";
     public static final String PASSWORD = "password";
-
     public static final String DBNAME = "db";
 
     // customquery

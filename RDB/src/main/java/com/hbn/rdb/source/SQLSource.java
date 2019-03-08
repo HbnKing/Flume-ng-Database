@@ -1,6 +1,7 @@
 package com.hbn.rdb.source;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hbn.rdb.page.PageableResultSet;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.SimpleEvent;
@@ -60,29 +61,37 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     }
     
     /**
+     *
      * Process a batch of events performing SQL Queries
+     *
+     *
      */
 	@Override
 	public Status process() throws EventDeliveryException {
         Status status = null;
+
         try {
+
             // This try clause includes whatever Channel/Event operations you want to do
-            ResultSet result = sqlSourceHelper.executeQuery();
-            ResultSetMetaData metaData = result.getMetaData();
+            PageableResultSet pageableResultSet = sqlSourceHelper.getNextPageableResultSet();
+            ResultSetMetaData metaData = pageableResultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
+            int end = pageableResultSet.getRowsCount();
 
             Event event = null ;
             JSONObject jsonObj = null ;
-            while (result.next()) {
+
+            for(int rowNum = 0 ; rowNum < end ; rowNum++){
+
                 // Receive new data
                 event = new SimpleEvent();
                 jsonObj = new JSONObject();
 
-                // 遍历每一列 的值 获取 出来
+                // 遍历每一列 的值 获取 出来  封装到一个 jsonObj 中
 
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnLabel(i);
-                    String value = result.getString(columnName);
+                    String value = pageableResultSet.getString(columnName);
                     //将 columnName  和 value  放置在 json  中
                     jsonObj.put(columnName, value);
                 }
@@ -100,9 +109,9 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 //修改当前指针使其自增
                 currentIndex = jsonObj.getLong(autoIncrementField) ==null ? currentIndex++ : Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
 
+                pageableResultSet.next();
+
             }
-            //currentIndex = currentIndex
-            //currentIndex = Math.max(currentIndex,currentIndex+resultsize.longValue());
             status = Status.READY;
         } catch (Throwable t) {
             // Log exception, handle individual exceptions as needed
@@ -111,6 +120,9 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             if (t instanceof Error) {
                 throw (Error) t;
             }
+            // 出现异常时候 重新获取数据 这个时候 页面数 要 恢复原来值
+            sqlSourceHelper.resetCurPage();
+
         } finally {
             //修改 index  使其自增
             sqlSourceHelper.setCurrentIndex(currentIndex);
@@ -118,6 +130,10 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
         return status;
     }
+
+
+
+
  
 	/**
 	 * Starts the source. Starts the metrics counter.

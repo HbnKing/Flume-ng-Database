@@ -47,8 +47,6 @@ public interface Pageable extends ResultSet {
      */
     int getCurPage();
 
-
-
 }
 
 

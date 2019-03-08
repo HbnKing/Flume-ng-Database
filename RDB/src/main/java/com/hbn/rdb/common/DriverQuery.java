@@ -20,18 +20,11 @@ import java.sql.*;
  **/
 public class DriverQuery {
 
-    private  Logger logger = LoggerFactory.getLogger(DriverQuery.class);
-
-    /*
-    private String  driver = "" ;
-    private String url ="" ;
-    private String dbuser = "" ;
-    private String password = "";
-    */
+    private   Logger logger = LoggerFactory.getLogger(DriverQuery.class);
 
     private   Connection connection = null ;
-    private   Statement statement = null ;
-    private ResultSet resultSet = null;
+    private   PreparedStatement statement = null ;
+    private   ResultSet resultSet = null;
 
     private  RDBconfig  rdBconfig=null ;
     public    void init(RDBconfig  RDBconfig){
@@ -51,9 +44,7 @@ public class DriverQuery {
         try {
             //反射方式获取驱动名称
             Class.forName(rdBconfig.getDriverclass());
-
             this.connection = DriverManager.getConnection(rdBconfig.getUrl(),rdBconfig.getDbuser(),rdBconfig.getDbpassword());
-            this.statement = connection.createStatement() ;
         } catch (ClassNotFoundException e) {
             logger.error("create connection failed  {}",e);
         } catch (SQLException e) {
@@ -63,14 +54,27 @@ public class DriverQuery {
     }
 
 
+    public  void  createPrepareStatement(String  sql) throws SQLException {
+        this.statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY) ;
+    }
+
+
     public   ResultSet executeQuery(String  sql) {
         //String  sql = "select * from  class";
-
         ResultSet  result = null;
         try {
-            resultSet = statement.executeQuery(sql);
+            statement =  connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY) ;
+
+            resultSet = statement.executeQuery();
+
         } catch (SQLException e) {
             logger.error("  query failed and the query is  {}  ,the  error  is  {}",sql ,e);
+            try {
+                Statement  statementInner = connection.createStatement();
+                resultSet = statementInner.executeQuery(sql);
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }finally {
             result = resultSet ;
             resultSet = null ;
