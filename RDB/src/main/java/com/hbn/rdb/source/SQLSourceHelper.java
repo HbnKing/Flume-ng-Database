@@ -1,11 +1,12 @@
 package com.hbn.rdb.source;
 
-import com.hbn.rdb.common.DefaultConfig;
+import com.hbn.rdb.common.ConfigConstant;
 import com.hbn.rdb.common.DriverQuery;
 import com.hbn.rdb.common.FileStatus;
 import com.hbn.rdb.common.RDBconfig;
 import com.hbn.rdb.page.PageableResultSet;
 import org.apache.flume.Context;
+import org.apache.flume.conf.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,10 @@ public class SQLSourceHelper {
    * @param context    Flume source context, contains the properties from configuration file
    * @param sourceName source file name for store status
    *
+   * 构造方法
+   * 1.解析 context  参数
+   * 2.根据内容 获取必要信息 判断结果流等
+   *
    */
   public SQLSourceHelper(Context context, String sourceName) {
     logger.info("started to  init SQLSourceHelper");
@@ -92,25 +97,25 @@ public class SQLSourceHelper {
 
     this.sourceName = sourceName;
     //起点
-    begin = context.getLong(DefaultConfig.BEGINNING,0L);
+    begin = context.getLong(ConfigConstant.BEGINNING,0L);
     logger.info("begin  is  {}",begin );
 
-    //自己写的sql
-    customerquery = context.getString(DefaultConfig.CUSTOMQUERY);
+    //自己写的sql 如果有定义 取其值 否则为 null
+    customerquery = context.getString(ConfigConstant.CUSTOMQUERY);
 
     logger.info("customerquery  is  {}" ,customerquery);
 
     //多个参数配的sql
-    table = context.getString(DefaultConfig.TABLE);
-    columnsToSelect = context.getString(DefaultConfig.COLUMNS_TO_SELECT,DefaultConfig.DEFAULT_COLUMNS_TO_SELECT);
-    autoIncrementField = context.getString(DefaultConfig.AUTOINCREMENTFIELD);
+    table = context.getString(ConfigConstant.TABLE);
+    columnsToSelect = context.getString(ConfigConstant.COLUMNS_TO_SELECT,ConfigConstant.DEFAULT_COLUMNS_TO_SELECT);
+    autoIncrementField = context.getString(ConfigConstant.AUTOINCREMENTFIELD);
 
     logger.info("table  is  {}",table);
     logger.info("columnsToSelect  is  {}",columnsToSelect);
     logger.info("autoIncrementField  is  {}",autoIncrementField);
 
 
-    Charset = context.getString(DefaultConfig.CHARSET_RESULTSET, DefaultConfig.DEFAULT_CHARSET_RESULTSET);
+    Charset = context.getString(ConfigConstant.CHARSET_RESULTSET, ConfigConstant.DEFAULT_CHARSET_RESULTSET);
     logger.info("charset  is  {}",Charset);
 
     //query = buildQuery();
@@ -118,16 +123,17 @@ public class SQLSourceHelper {
      * 数据库连接配置
      */
 
-    drivername = context.getString(DefaultConfig.DRIVER);
+    drivername = context.getString(ConfigConstant.DRIVER);
 
-    username = context.getString(DefaultConfig.USER);
-    password = context.getString(DefaultConfig.PASSWORD);
-    conectionurl = context.getString(DefaultConfig.URL);
+    username = context.getString(ConfigConstant.USER);
+    password = context.getString(ConfigConstant.PASSWORD);
+    conectionurl = context.getString(ConfigConstant.URL);
     logger.info("connectionurl  is  {}",conectionurl);
     logger.info("driver  is  {}",drivername);
 
 
 
+    checkMandatoryProperties();
     //封装到 RDB
     RDBconfig.setDbpassword(password);
     RDBconfig.setDbuser(username);
@@ -139,8 +145,8 @@ public class SQLSourceHelper {
     //driverQuery.init(RDBconfig);
 
     //中间文件状态 资料
-    filePath = context.getString(DefaultConfig.FILEPATH,DefaultConfig.DEFAULT_FILEPATH);
-    fileName = context.getString(DefaultConfig.FILENAME,DefaultConfig.DEFAULT_FILENAME);
+    filePath = context.getString(ConfigConstant.FILEPATH,ConfigConstant.DEFAULT_FILEPATH);
+    fileName = context.getString(ConfigConstant.FILENAME,ConfigConstant.DEFAULT_FILENAME);
 
     logger.info("filePath is  {}",filePath);
     logger.info("fileName is  {}",fileName);
@@ -152,10 +158,30 @@ public class SQLSourceHelper {
     logger.info("Index  started  from  {}" ,currentIndex);
 
     //  分页信息
-    batchsize = context.getInteger(DefaultConfig.BATCH_SIZE ,DefaultConfig.DEFAULT_BATCH_SIZE);
+    batchsize = context.getInteger(ConfigConstant.BATCH_SIZE ,ConfigConstant.DEFAULT_BATCH_SIZE);
 
 
 
+  }
+
+
+  public void checkMandatoryProperties() {
+
+    if (conectionurl == null) {
+      throw new ConfigurationException("database - connection - url property not set");
+    }
+
+    if (table == null && customerquery == null) {
+      throw new ConfigurationException("property table not set");
+    }
+
+    if (username == null) {
+      throw new ConfigurationException("database - connection - user property not set");
+    }
+
+    if (password == null) {
+      throw new ConfigurationException("database - connection - password property not set");
+    }
   }
 
   public String buildQuery() {
@@ -312,7 +338,6 @@ public class SQLSourceHelper {
       }else if(curPage <=pageableResultSet.getPageCount()){
         pageableResultSet.gotoPage(curPage);
         curPage++;
-
       }else {
         closePageableResultSet();
         curPage = 1 ;

@@ -9,20 +9,21 @@ package com.hbn.rdb.common;
  * 2属性默认值
  *
  **/
-public class DefaultConfig {
-    private DefaultConfig(){}
+public class ConfigConstant {
+    private ConfigConstant(){}
     //中间文件 保存位置
     public static final String FILEPATH = "filepath" ;
     public static final String FILENAME = "filename" ;
     public static final String DEFAULT_FILEPATH = "/var/lib/flume";
     public static final String DEFAULT_FILENAME = "SourceName";
 
+
     public static final int DEFAULT_QUERY_DELAY = 10000;
-    public static final String BATCH_SIZE="batchsize";
     public static final int DEFAULT_BATCH_SIZE = 100;
     public static final int DEFAULT_MAX_ROWS = 10000;
 
 
+    public static final String BATCH_SIZE="batchsize";
 
 
     public static final String DEFAULT_INCREMENTAL_VALUE = "0";

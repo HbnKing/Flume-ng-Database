@@ -20,7 +20,7 @@ package com.hbn.rdb.page;
  *    for (int i = 0; i < rs.getPageRowsCount(); i++) {
  *     /...进行取值.../
  *     rs.next();//不要忘记next()
- *    }
+ * }
  *
  *
  *
@@ -45,7 +45,6 @@ public class PageableResultSet implements Pageable {
     protected int rowsCount;
     protected int pageSize;
     protected int curPage;
-    protected String command = "";
 
 
     public PageableResultSet(java.sql.ResultSet rs) throws java.sql.SQLException {

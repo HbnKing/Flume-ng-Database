@@ -1,6 +1,6 @@
 package hbn;
 
-import com.hbn.rdb.common.DefaultConfig;
+import com.hbn.rdb.common.ConfigConstant;
 import com.hbn.rdb.source.SQLSourceHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.flume.Context;
@@ -30,19 +30,19 @@ public class SQLSourceHelperTest {
 	@Before
 	public void setup() {
 
-		when(context.getString(DefaultConfig.FILENAME,DefaultConfig.DEFAULT_FILENAME)).thenReturn("statusFileName");
-		when(context.getString(DefaultConfig.URL)).thenReturn("jdbc:mysql://host:3306/database");
-		when(context.getString(DefaultConfig.TABLE)).thenReturn("table");
-		when(context.getString(DefaultConfig.AUTOINCREMENTFIELD)).thenReturn("incrementalColumName");
-		when(context.getString(DefaultConfig.FILEPATH, "/var/lib/flume")).thenReturn("/tmp/flume");
-		when(context.getString(DefaultConfig.COLUMNS_TO_SELECT, "*")).thenReturn("*");
+		when(context.getString(ConfigConstant.FILENAME,ConfigConstant.DEFAULT_FILENAME)).thenReturn("statusFileName");
+		when(context.getString(ConfigConstant.URL)).thenReturn("jdbc:mysql://host:3306/database");
+		when(context.getString(ConfigConstant.TABLE)).thenReturn("table");
+		when(context.getString(ConfigConstant.AUTOINCREMENTFIELD)).thenReturn("incrementalColumName");
+		when(context.getString(ConfigConstant.FILEPATH, "/var/lib/flume")).thenReturn("/tmp/flume");
+		when(context.getString(ConfigConstant.COLUMNS_TO_SELECT, "*")).thenReturn("*");
 		when(context.getInteger("run.query.delay", 10000)).thenReturn(10000);
-		when(context.getInteger(DefaultConfig.BATCH_SIZE, 100)).thenReturn(100);
+		when(context.getInteger(ConfigConstant.BATCH_SIZE, 100)).thenReturn(100);
 		when(context.getInteger("max.rows", 10000)).thenReturn(10000);
 		when(context.getString("incremental.value", "0")).thenReturn("0");
-		when(context.getInteger(DefaultConfig.BEGINNING, 0)).thenReturn(0);
-		when(context.getString(DefaultConfig.USER)).thenReturn("user");
-		when(context.getString(DefaultConfig.PASSWORD)).thenReturn("password");
+		when(context.getInteger(ConfigConstant.BEGINNING, 0)).thenReturn(0);
+		when(context.getString(ConfigConstant.USER)).thenReturn("user");
+		when(context.getString(ConfigConstant.PASSWORD)).thenReturn("password");
 	}
 
 
@@ -90,7 +90,7 @@ public class SQLSourceHelperTest {
 	
 	@Test
 	public void getCustomQuery() {
-		when(context.getString(DefaultConfig.CUSTOMQUERY)).thenReturn("SELECT column FROM table where id > $@$");
+		when(context.getString(ConfigConstant.CUSTOMQUERY)).thenReturn("SELECT column FROM table where id > $@$");
 		SQLSourceHelper sqlSourceHelper = new SQLSourceHelper(context,"Source Name");
 		assertEquals("SELECT column FROM table where id > 0",sqlSourceHelper.buildQuery());
 	}
@@ -103,7 +103,7 @@ public class SQLSourceHelperTest {
 
 	/*@Test(expected = ConfigurationException.class)
 	public void checkStatusFileNameNotSet() {
-		when(context.getString(DefaultConfig.FILENAME)).thenReturn(null);
+		when(context.getString(ConfigConstant.FILENAME)).thenReturn(null);
 		new SQLSourceHelper(context,"Source Name");
 	}
 
@@ -201,10 +201,10 @@ public class SQLSourceHelperTest {
 
 		//File file = File.createTempFile("statusFileName", ".txt");
 
-		when(context.getString(DefaultConfig.FILEPATH)).thenReturn("/var/lib/flume");
-		when(context.getString(DefaultConfig.URL)).thenReturn("jdbc:mysql://host:3306/database");
-		when(context.getString(DefaultConfig.TABLE)).thenReturn("table");
-		when(context.getString(DefaultConfig.FILENAME)).thenReturn("statusFileName");
+		when(context.getString(ConfigConstant.FILEPATH)).thenReturn("/var/lib/flume");
+		when(context.getString(ConfigConstant.URL)).thenReturn("jdbc:mysql://host:3306/database");
+		when(context.getString(ConfigConstant.TABLE)).thenReturn("table");
+		when(context.getString(ConfigConstant.FILENAME)).thenReturn("statusFileName");
 
 		SQLSourceHelper sqlSourceHelper = new SQLSourceHelper(context,"Source Name");
 		sqlSourceHelper.getCurrentIndexStatusFile();
