@@ -9,9 +9,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import source2.model.BinlogInfo;
+import source2.model.BinlogMasterStatus;
+import source2.model.ColumnInfo;
 
 /**
  * @author wangheng
@@ -67,7 +72,7 @@ public class MysqlConnection {
      *
      * @return
      */
-    public static Map<String,List<ColumnInfo>> getColumns(){
+    public static Map<String, List<ColumnInfo>> getColumns(){
         Map<String,List<ColumnInfo>> cols = new HashMap<>();
         Connection conn = getConnection();
 
@@ -80,6 +85,8 @@ public class MysqlConnection {
                 ResultSet result = metaData.getTables(databaseName, null, null, tableType);
                 while(result.next()){
                     String tableName = result.getString("TABLE_NAME");
+                    //-----
+                    System.out.println(result);
 //                  System.out.println(result.getInt("TABLE_ID"));
                     String key = databaseName +"."+tableName;
                     ResultSet colSet = metaData.getColumns(databaseName, null, tableName, null);

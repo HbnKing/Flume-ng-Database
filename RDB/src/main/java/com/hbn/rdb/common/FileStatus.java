@@ -12,8 +12,8 @@ import java.util.Properties;
 
 /**
  * @author wangheng
- * @create 2019-01-24 下午1:58
- * @desc
+ * @date 2019-01-24 下午1:58
+ * @description
  *
  * 读取和 保存 中间文件的状态
  * 创建  文件
@@ -32,10 +32,11 @@ public class FileStatus {
 
         return file.exists() && !file.isDirectory() ? true : false;
     }
+
     /**
-     *
      * Create status file
-     *
+     * @param filePath
+     * @param fileName
      */
     public static void createStatusFile( String filePath,String fileName) {
         File  file = new File(filePath,fileName);
@@ -87,12 +88,13 @@ public class FileStatus {
     }
 
 
+
     /**
      * 传递键值对的Map，更新properties文件
-     *
+     * 文件名(放在resource源包目录下)，需要后缀
      * @param filePath
-     *            文件名(放在resource源包目录下)，需要后缀
-     *
+     * @param fileName
+     * @param value
      */
     public static void updateProperties(String filePath, String fileName ,Long  value) {
 

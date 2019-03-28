@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import or.keeper.TableInfoKeeper;
-import or.manager.CDCEventManager;
-import or.model.ColumnInfo;
-import or.model.TableInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +22,8 @@ import com.google.code.or.common.glossary.Column;
 import com.google.code.or.common.glossary.Pair;
 import com.google.code.or.common.glossary.Row;
 import com.google.code.or.common.util.MySQLConstants;
+import source2.manager.CDCEventManager;
+import source2.model.ColumnInfo;
 
 
 /**

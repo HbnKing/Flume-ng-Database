@@ -290,13 +290,17 @@ public class SQLSourceHelper {
     return driverQuery.executeQuery(sql);
   }
 
+  public int getRowCount(){
+    return driverQuery.getRowCount();
+  }
+
 
 
 
   private PageableResultSet getPageableResultSet() throws SQLException {
     // 第一次请求
     if(pageableResultSet==null){
-      pageableResultSet = new PageableResultSet(executeQuery());
+      pageableResultSet = new PageableResultSet(executeQuery(),getRowCount());
       pageableResultSet.setPageSize(batchsize);
     }
     return pageableResultSet;
@@ -361,8 +365,6 @@ public class SQLSourceHelper {
     }
 
   }
-
-
 
 }
 

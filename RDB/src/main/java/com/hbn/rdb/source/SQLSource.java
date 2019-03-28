@@ -72,15 +72,80 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 	public Status process() throws EventDeliveryException {
         Status status = null;
 
-        try {
+        logger.info("started  process ");
 
+        try {
             /*start  sqlSourceCounter*/
             sqlSourceCounter.startProcess();
             // This try clause includes whatever Channel/Event operations you want to do
             PageableResultSet pageableResultSet = sqlSourceHelper.getNextPageableResultSet();
 
+
             //  send  batch  or  send  One  by  One  welcome  to  contribute
-            status = sendEventBatch(pageableResultSet);
+
+            ResultSetMetaData metaData = pageableResultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            int end = pageableResultSet.getPageRowsCount();
+
+
+            logger.info("column  count is {}",columnCount);
+            logger.info("page row count is  {}",end);
+
+            Event event = null ;
+            JSONObject jsonObj = null ;
+
+            long  id = 0L ;
+            int counter = 0 ;
+            for(int rowNum = 0 ; rowNum < end ; rowNum++){
+
+                // Receive new data
+                event = new SimpleEvent();
+                jsonObj = new JSONObject();
+
+                // 遍历每一列 的值 获取 出来  封装到一个 jsonObj 中
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    Object value = pageableResultSet.getObject(columnName);
+                    //将 columnName  和 value  放置在 json  中
+                    //jsonObj.put(columnName, value);
+                    if(jsonObj.containsKey(columnName)){
+                        jsonObj.put(columnName+"_"+i,value);
+                    }else {
+                        jsonObj.put(columnName,value);
+                    }
+                }
+
+                if(!jsonObj.isEmpty()){
+                    //一次完成之后是该行生成的一个的  一个json 文件
+                    String  str = jsonObj.toJSONString();
+                    event.setBody(str.getBytes(Charset.forName("UTF-8")));
+
+
+                    this.getChannelProcessor().processEvent(event);
+
+                    //记录当前id
+                    id = jsonObj.getLongValue(autoIncrementField);
+
+                    counter++;
+                }
+
+                pageableResultSet.next();
+
+            }
+
+
+            //修改当前指针使其自增
+            if(id>0){
+                currentIndex = id ;
+            }else {
+                currentIndex += counter;
+            }
+
+            logger.info("send  event size by  source  is {}",counter);
+
+            /*counter*/
+            sqlSourceCounter.incrementEventCount(counter);
+            sqlSourceCounter.endProcess(counter);
 
         } catch (Throwable t) {
             // Log exception, handle individual exceptions as needed
@@ -158,11 +223,9 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
         ResultSetMetaData metaData = pageableResultSet.getMetaData();
         int columnCount = metaData.getColumnCount();
-        int end = pageableResultSet.getRowsCount();
+        int end = pageableResultSet.getPageRowsCount();
 
-        if(pageableResultSet.first()){
 
-        }
 
         for(int rowNum = 0 ; rowNum < end ; rowNum++){
 
@@ -179,20 +242,26 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 jsonObj.put(columnName, value);
             }
 
-            //一次完成之后是该行生成的一个的  一个json 文件
-            event.setBody(jsonObj.toString().getBytes(Charset.forName("UTF-8")));
+            if(jsonObj.size() >0){
+                //一次完成之后是该行生成的一个的  一个json 文件
+                event.setBody(jsonObj.toString().getBytes(Charset.forName("UTF-8")));
+                //logger.info(jsonObj.toJSONString());
+                //logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
 
-            //logger.info(jsonObj.toJSONString());
-            //logger.info(new String( event.getBody(),Charset.forName("UTF-8")));
+                //单个发送  或者批次发送？这个可以在考量一下
+                //以及 增量算法 都还有优化空间
+                this.getChannelProcessor().processEvent(event);
+                /*counter*/
+                sqlSourceCounter.incrementEventCount(1);
 
-            //单个发送  或者批次发送？这个可以在考量一下
-            //以及 增量算法 都还有优化空间
-            this.getChannelProcessor().processEvent(event);
-            /*counter*/
-            sqlSourceCounter.incrementEventCount(1);
+                //修改当前指针使其自增
+                currentIndex = jsonObj.getLong(autoIncrementField) ==null ? currentIndex++ : Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
 
-            //修改当前指针使其自增
-            currentIndex = jsonObj.getLong(autoIncrementField) ==null ? currentIndex++ : Math.max(jsonObj.getLong(autoIncrementField),currentIndex);
+            }
+
+
+
+
 
             pageableResultSet.next();
 
@@ -212,16 +281,18 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     private  Status  sendEventBatch(PageableResultSet pageableResultSet) throws SQLException {
 
 
-        Status status = null;
+        Status status = Status.BACKOFF;
 
         ResultSetMetaData metaData = pageableResultSet.getMetaData();
         int columnCount = metaData.getColumnCount();
-        int end = pageableResultSet.getRowsCount();
+        int end = pageableResultSet.getPageRowsCount();
 
         Event event = null ;
         JSONObject jsonObj = null ;
 
         long  id = 0L ;
+
+
 
         List<Event> events = new ArrayList<Event>(sqlSourceHelper.getBatchsize());
         for(int rowNum = 0 ; rowNum < end ; rowNum++){
@@ -238,14 +309,18 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 jsonObj.put(columnName, value);
             }
 
-            //一次完成之后是该行生成的一个的  一个json 文件
-            event.setBody(jsonObj.toString().getBytes(Charset.forName("UTF-8")));
+            if(jsonObj.size()>0){
+                //一次完成之后是该行生成的一个的  一个json 文件
+                String  str = jsonObj.toJSONString();
+                event.setBody(str.getBytes(Charset.forName("UTF-8")));
 
-            //这里 封装到 list 里面 再批量发送
-            events.add(event);
+                //logger.info(" send event is {} ",str);
+                //这里 封装到 list 里面 再批量发送
+                events.add(event);
 
-            //记录当前id
-            id = jsonObj.getLongValue(autoIncrementField);
+                //记录当前id
+                id = jsonObj.getLongValue(autoIncrementField);
+            }
 
             pageableResultSet.next();
 
@@ -260,14 +335,84 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         }
 
         if(eventssize>0){
+
             /*batch  events send  to channel  */
             this.getChannelProcessor().processEventBatch(events);
-            events.clear();
+            //events.clear();
+
+            logger.info("send  event size by  source  is {}",eventssize);
         }
 
         /*counter*/
         sqlSourceCounter.incrementEventCount(eventssize);
         sqlSourceCounter.endProcess(eventssize);
+
+        status = Status.READY;
+
+        return  status ;
+    }
+
+
+
+    private  Status  sendEvent(PageableResultSet pageableResultSet) throws SQLException {
+
+
+        Status status = Status.BACKOFF;
+
+        ResultSetMetaData metaData = pageableResultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        int end = pageableResultSet.getPageRowsCount();
+
+        Event event = null ;
+        JSONObject jsonObj = null ;
+
+        long  id = 0L ;
+
+        int counter = 0 ;
+
+
+
+        List<Event> events = new ArrayList<Event>(sqlSourceHelper.getBatchsize());
+        for(int rowNum = 0 ; rowNum < end ; rowNum++){
+
+            // Receive new data
+            event = new SimpleEvent();
+            jsonObj = new JSONObject();
+
+            // 遍历每一列 的值 获取 出来  封装到一个 jsonObj 中
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnLabel(i);
+                String value = pageableResultSet.getString(columnName);
+                //将 columnName  和 value  放置在 json  中
+                jsonObj.put(columnName, value);
+            }
+
+            if(jsonObj.size()>0){
+                //一次完成之后是该行生成的一个的  一个json 文件
+                String  str = jsonObj.toJSONString();
+                event.setBody(str.getBytes(Charset.forName("UTF-8")));
+
+                //logger.info(" send event is {} ",str);
+                //这里 封装到 list 里面 再批量发送
+                //events.add(event);
+                getChannelProcessor().processEvent(event);
+                counter++;
+
+                //记录当前id
+                id = jsonObj.getLongValue(autoIncrementField);
+            }
+
+            pageableResultSet.next();
+
+        }
+
+
+
+
+
+        /*counter*/
+        sqlSourceCounter.incrementEventCount(counter);
+        sqlSourceCounter.endProcess(counter);
 
         status = Status.READY;
 

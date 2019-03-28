@@ -28,8 +28,8 @@ a1.sources.r1.columnstoselect = id,age,sex
 a1.sources.batchsize = 1000
 
 # Custom query  自定义 语句  需要配置 自增字段起点位置 排序,和 限制输出。
-a1.sources.customquery = select * from table  where id > $@$  order by  id limit 100 offset 0 ;
-#a1.sources.customquery = select * from  newtable  where id > 189705730   order by  id limit 100   ;
+#a1.sources.r1.customquery = select * from table  where id > $@$  order by  id limit 100 offset 0 ;
+a1.sources.r1.customquery = select * from  newtable  where id > 189705730   order by  id limit 100   ;
 a1.sources.r1.begin = 2
 
 

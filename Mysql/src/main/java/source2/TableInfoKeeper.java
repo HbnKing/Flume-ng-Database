@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import or.MysqlConnection;
-import or.model.ColumnInfo;
-import or.model.TableInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.or.binlog.impl.event.TableMapEvent;
+import source2.model.ColumnInfo;
+
 /**
  * @author wangheng
  * @create 2019-02-17 下午4:15

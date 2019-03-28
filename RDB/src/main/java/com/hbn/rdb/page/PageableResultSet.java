@@ -47,12 +47,17 @@ public class PageableResultSet implements Pageable {
     protected int curPage;
 
 
-    public PageableResultSet(java.sql.ResultSet rs) throws java.sql.SQLException {
+    public PageableResultSet(java.sql.ResultSet rs ,int newRowsCount) throws java.sql.SQLException {
         if(rs==null) throw new SQLException("given ResultSet is NULL","user");
-        rs.last();
-        rowsCount=rs.getRow();
-        System.out.println(rowsCount);
-        rs.beforeFirst();
+        if(false){
+            rs.last();
+            rowsCount=rs.getRow();
+            System.out.println(rowsCount);
+            rs.beforeFirst();
+        }
+
+        this.rowsCount = newRowsCount;
+
         this.rs=rs;
 
     }

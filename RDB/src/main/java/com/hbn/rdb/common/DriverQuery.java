@@ -20,14 +20,20 @@ import java.sql.*;
  **/
 public class DriverQuery {
 
-    private   Logger logger = LoggerFactory.getLogger(DriverQuery.class);
+    private  static Logger logger = LoggerFactory.getLogger(DriverQuery.class);
 
-    private   Connection connection = null ;
-    private   PreparedStatement statement = null ;
-    private   ResultSet resultSet = null;
+    private  static Connection connection = null ;
+    private  static PreparedStatement statement = null ;
+    private  static ResultSet resultSet = null;
 
-    private  RDBconfig  rdBconfig=null ;
-    public    void init(RDBconfig  RDBconfig){
+
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    private static int rowCount = 0 ;
+    private static RDBconfig  rdBconfig=null ;
+    public  void init(RDBconfig  RDBconfig){
         if(RDBconfig==null){
             logger.error(" init  failed   driver message  has some  error " );
         }else {
@@ -59,7 +65,7 @@ public class DriverQuery {
     }
 
 
-    public   ResultSet executeQuery(String  sql) {
+    public   ResultSet executeQuerySQL(String  sql) {
         //String  sql = "select * from  class";
         ResultSet  result = null;
         try {
@@ -67,10 +73,12 @@ public class DriverQuery {
 
             resultSet = statement.executeQuery();
 
+
         } catch (SQLException e) {
             logger.error("  query failed and the query is  {}  ,the  error  is  {}",sql ,e);
             try {
-                Statement  statementInner = connection.createStatement();
+                Statement  statementInner = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY);
                 resultSet = statementInner.executeQuery(sql);
             } catch (SQLException e1) {
                 e1.printStackTrace();
@@ -79,7 +87,38 @@ public class DriverQuery {
             result = resultSet ;
             resultSet = null ;
         }
+
+
+
         return result ;
+    }
+
+    public ResultSet executeQuery(String sql){
+
+        ResultSet  rs = executeQuerySQL(sql);
+        int rowNum = 0 ;
+        try {
+            /* 获取行数 */
+            ResultSet resultSetTemp = executeQuerySQL(" select count(*)  from ( " + sql + " )");
+            if(resultSetTemp != null && resultSetTemp.next()){
+                rowNum = resultSetTemp.getInt(1);
+                resultSetTemp.close();
+                resultSetTemp = null ;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            rowCount = 0 ;
+            if(rowNum >0){
+                rowCount = rowNum ;
+                logger.info("rowCount is {}" ,rowCount);
+            }
+        }
+
+        return rs ;
+
+
     }
 
 
