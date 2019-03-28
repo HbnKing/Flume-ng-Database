@@ -1,0 +1,30 @@
+f2.sources = r1
+f2.channels = c1
+f2.sinks = k1
+#具体定义source  指定采集文件
+#f2.sources.r1.type = exec
+#f2.sources.r1.command = tail -f /1.log
+
+# 这里用 自己定义的 SQLSource
+f2.sources.r1.type = com.hbn.rdb.source.SQLSource
+f2.sources.r1.connectionurl = jdbc:oracle:thin:@//ip:1521/orcl
+f2.sources.r1.user = yyj
+f2.sources.r1.password = yyj
+f2.sources.r1.driverclass= oracle.jdbc.driver.OracleDriver
+f2.sources.r1.filepath = /var/log/sqllog
+f2.sources.r1.filename = sqlSource.status
+#f2.sources.r1.customquery = select a.id,a.COUPON_id,b.id from USER_COUPON_CODE_1 a ,COUPON_CODE b  where a.COUPON_id = b.id
+#f2.sources.r1.customquery = select a.id,a.COUPON_id,b.id from USER_COUPON_CODE_1 a ,COUPON_CODE b  where a.COUPON_id = b.id  and  a.id > $@$
+f2.sources.r1.customquery = select * from USER_COUPON_CODE_1
+f2.sources.r1.begin = 0
+f2.sources.r1.autoincrementfield = a.id
+f2.sources.r1.batchsize = 1000
+#具体定义channel
+f2.channels.c1.type = memory
+f2.channels.c1.capacity = 1000
+f2.channels.c1.transactionCapacity = 100
+#具体定义sink
+f2.sinks.k1.type = logger
+#组装source、channel、sink
+f2.sources.r1.channels = c1
+f2.sinks.k1.channel = c1
