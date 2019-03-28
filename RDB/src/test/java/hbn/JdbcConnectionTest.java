@@ -75,7 +75,7 @@ public class JdbcConnectionTest {
         DriverQuery driverQuery = new DriverQuery();
         driverQuery.init(rdBconfig);
         driverQuery.createConnection();
-        ResultSet resultSet = driverQuery.executeQuery("select * from newtable");
-        return  resultSet ;
+        //ResultSet resultSet = driverQuery.executeQuery("select * from newtable");
+        return  null ;
     }
 }

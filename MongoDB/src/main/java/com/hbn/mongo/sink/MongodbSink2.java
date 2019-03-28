@@ -1,0 +1,141 @@
+/*
+package com.hbn.mongo.sink;
+
+import com.cloudera.flume.conf.Context;
+import com.cloudera.flume.conf.SinkFactory.SinkBuilder;
+import com.cloudera.flume.core.Event;
+import com.cloudera.flume.core.EventSink;
+import com.cloudera.util.Pair;
+import com.google.common.base.Preconditions;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+*/
+/**
+ * @author wangheng
+ * @create 2019-03-11 下午4:15
+ * @desc
+ **//*
+
+
+public class MongodbSink2 extends EventSink.Base {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MongoDBSink.class);
+
+    private final MongoClientURI uri;
+    private MongoClient mongo;
+    private DBCollection collection;
+
+    */
+/**
+     * Constructs a new instance against the given URI
+     * @param uriString the MongoDB URI
+     *//*
+
+    public MongodbSink2(final String uriString) {
+        uri = new MongoClientURI(uriString);
+    }
+
+    @Override
+    public void open() {
+        try {
+            mongo = new MongoClient(uri);
+        } catch (final Exception e) {
+            LOG.error("Connecting to MongoDB failed.", e);
+            throw new MongoException("Failed to connect to MongoDB. ", e);
+        }
+        try {
+            collection = mongo.getDB(uri.getDatabase()).getCollection(uri.getCollection());
+        } catch (final Exception e) {
+            LOG.error("Connected to MongoDB but failed in acquiring collection.", e);
+            throw new MongoException("Could not acquire specified collection.", e);
+        }
+    }
+
+    @Override
+    public void append(final Event e) throws IOException {
+        */
+/*
+         * TODO - Performance would be best if we wrote directly to BSON here...
+         * e.g. Not double converting the timestamp, and skipping string
+         * encoding/decoding the message body
+         *//*
+
+        // Would it work to use Timestamp + Nanos + Hostname as the ID or is
+        // there still a collision chance?
+        BasicDBObjectBuilder b = BasicDBObjectBuilder.start("timestamp", new Date(e.getTimestamp()));
+        b.append("nanoseconds", e.getNanos());
+        b.append("hostname", e.getHost());
+        b.append("priority", e.getPriority().name());
+        b.append("message", new String(e.getBody()));
+        b.append("metadata", new BasicDBObject(e.getAttrs()));
+        collection.insert(b.get());
+    }
+
+    @Override
+    public void close() throws IOException {
+        // TODO - Flume docs specify all blocking must be kicked during
+        // disconnect. Verify we do. No hanging!
+        mongo.close();
+    }
+
+    public static SinkBuilder builder() {
+        return new SinkBuilder() {
+            // Create a new sink using a MongoDB URI
+            @Override
+            public EventSink build(final Context context, final String... argv) {
+                Preconditions
+                        .checkArgument(argv.length == 1,
+                                "usage: mongoDBSink(\"mongodb://[username:password@]host1[:port1][,host2[:port2],...[,"
+                                        + "hostN[:portN]]][/[database][?options]]\")\n ... See "
+                                        + "http://www.mongodb.org/display/DOCS/Connections for information on the MongoDB Connection"
+                                        + " URI Format."
+                                        + "\n\t Note that using [?options] you can specify Write Concern related settings: "
+                                        + "\n\t\t safe={true|false} (default: false) Whether or not the driver should send getLastError to "
+                                        + "verify each write operation."
+                                        + "\n\t\t w={n} (default: 0) Specify the number of servers to replicate a write to before returning"
+                                        + " success. When non-zero, implies safe=true."
+                                        + "\n\t\t wtimeout={ms} (default: wait forever) The number of milliseconds to wait for W "
+                                        + "replications to complete.  When non-zero, implies safe=true."
+                                        + "\n\t\t fsync={true|false} (default: false) When enabled, "
+                                        + "forces an fsync after each write operation to increase durability.  You probably *don't* want to "
+                                        + "do this; see the MongoDB docs for info.  When 'true', implies safe=true"
+                        );
+
+                return new MongoDBSink(argv[0]);
+            }
+        };
+    }
+
+    public com.mongodb.MongoClientURI getUri() {
+        return uri;
+    }
+
+    public com.mongodb.MongoClient getMongo() {
+        return mongo;
+    }
+
+    public com.mongodb.DBCollection getCollection() {
+        return collection;
+    }
+
+    // Special function used by Flume's SourceFactory to pull this class in
+    // and use it as a plugin Sink
+    public static List<Pair<String, SinkBuilder>> getSinkBuilders() {
+        List<Pair<String, SinkBuilder>> builders = new ArrayList<Pair<String, SinkBuilder>>();
+        builders.add(new Pair<String, SinkBuilder>("mongoDBSink", builder()));
+        return builders;
+    }
+}
+*/

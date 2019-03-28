@@ -6,7 +6,7 @@
     <version>0.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>RDB</artifactId>
+  <artifactId>MongoDB</artifactId>
   <build>
     <plugins>
       <plugin>
@@ -32,9 +32,6 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.18.1</version>
-        <configuration>
-          <skipTests>true</skipTests>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -154,21 +151,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.0</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  <properties>
-    <mysql.driver.version>6.0.5</mysql.driver.version>
-  </properties>
 </project>
 

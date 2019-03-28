@@ -1,87 +1,36 @@
-/*
 package com.hbn.mongo.sink;
 
-import com.hbn.common.MongoConfig;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
+import com.hbn.mongo.common.MongoConfig;
+import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
-import org.apache.flume.Context;
-import org.apache.flume.Event;
-import org.apache.flume.EventDeliveryException;
+import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.instrumentation.SinkCounter;
 import org.apache.flume.sink.AbstractSink;
 import org.bson.Document;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-*/
+
 /**
  * @author wangheng
  * @create 2019-01-11 下午11:35
  * @desc
- **//*
+ *  这里 只做 insert  op
+ *
+ *
+ **/
 
 
 
 
 public class MongoSinkwh extends AbstractSink implements Configurable {
     private static Logger logger = LoggerFactory.getLogger(MongoSinkwh.class);
-
-    private static DateTimeParser[] parsers = {
-            DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss Z").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS Z").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssz").getParser(),
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSz").getParser(),
-    };
-
-    public static final String HOST = "host";
-    public static final String PORT = "port";
-    public static final String AUTHENTICATION_ENABLED = "authenticationEnabled";
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String MODEL = "model";
-    public static final String DB_NAME = "db";
-    public static final String COLLECTION = "collection";
-    public static final String NAME_PREFIX = "MongSink_";
-    public static final String BATCH_SIZE = "batch";
-    public static final String AUTO_WRAP = "autoWrap";
-    public static final String WRAP_FIELD = "wrapField";
-    public static final String TIMESTAMP_FIELD = "timestampField";
-    public static final String OPERATION = "op";
-    public static final String PK = "_id";
-    public static final String OP_INC = "$inc";
-    public static final String OP_SET = "$set";
-    public static final String OP_SET_ON_INSERT = "$setOnInsert";
-
-    public static final boolean DEFAULT_AUTHENTICATION_ENABLED = false;
-    public static final String DEFAULT_HOST = "localhost";
-    public static final int DEFAULT_PORT = 27017;
-    public static final String DEFAULT_DB = "events";
-    public static final String DEFAULT_COLLECTION = "events";
-    public static final int DEFAULT_BATCH = 100;
-    private static final Boolean DEFAULT_AUTO_WRAP = false;
-    public static final String DEFAULT_WRAP_FIELD = "log";
-    public static final String DEFAULT_TIMESTAMP_FIELD = null;
-    public static final char NAMESPACE_SEPARATOR = '.';
-    public static final String OP_UPSERT = "upsert";
-    public static final String EXTRA_FIELDS_PREFIX = "extraFields.";
 
     private static AtomicInteger counter = new AtomicInteger();
 
@@ -93,7 +42,7 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
     private boolean authentication_enabled;
     private String username;
     private String password;
-    private CollectionModel model;
+    //private CollectionModel model;
     private String dbName;
     private String collectionName;
     private int batchSize;
@@ -106,19 +55,32 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
     private MongoClient  mongoClient ;
     private SinkCounter sinkCounter;
 
+    private MongodbSinkHelper mongodbSinkHelper;
 
-    private MongoCollection<Document> collection ;
+
+
+
+
+    private MongoCollection<Document> mongoCollection ;
 
     @Override
     public void configure(Context context) {
 
+        /**
+         * 初始化 MongodbSinkHelper
+         */
+        mongodbSinkHelper = new MongodbSinkHelper(context ,getName());
         try {
-            mongoConfig = MongoConfig.getMongoConfig();
-            mongoClient = MongoConfig.getMongoClient();
-            collectionName = MongoConfig.getTABLENAME();
-            dbName = MongoConfig.getDATABASE();
-            collection =  mongoClient.getDatabase(dbName).getCollection(collectionName);
-        }catch (Exception e){
+
+            sinkCounter = new SinkCounter(getName());
+            mongoCollection  = mongodbSinkHelper.getMongoCollection();
+            if(mongoCollection !=null){
+                logger.info("connect  to  collections  successful !");
+            }else {
+                logger.error("connect  to  collections  failed !");
+                throw   new  IllegalArgumentException("connect  to  collections  failed !") ;
+            }
+        }catch (IllegalArgumentException  e){
             logger.error(e.toString());
         }
 
@@ -140,16 +102,32 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
         logger.debug("{} start to process event", getName());
 
         Status status = Status.READY;
+        Channel channel = getChannel();
+        Transaction tx = null;
         try {
-            status = parseEvents();
+            tx = channel.getTransaction();
+            tx.begin();
+            Event event = channel.take();
+            if(event !=null){
+                String body = new String(event.getBody(), StandardCharsets.UTF_8);
+
+                saveEventOneByOne(body);
+            }
+            status = Status.READY;
+            tx.commit();
+
         } catch (Exception e) {
+            tx.rollback();
+            status = Status.BACKOFF;
             logger.error("can't process events", e);
+        }finally {
+            tx.close();
         }
         logger.debug("{} processed event", getName());
         return status;
     }
 
-    private void saveEvents(Map<String, List<DBObject>> eventMap) {
+    /*private void saveEvents(Map<String, List<DBObject>> eventMap) {
         if (eventMap.isEmpty()) {
             logger.debug("eventMap is empty");
             return;
@@ -206,16 +184,16 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
             }
         }
     }
-
-    private Status parseEvents() throws EventDeliveryException {
+*/
+    /*private Status parseEvents() throws EventDeliveryException {
         Status status = Status.READY;
         Channel channel = getChannel();
-        Transaction tx = null;
+        Transaction transaction = null;
         Map<String, List<DBObject>> eventMap = new HashMap<String, List<DBObject>>();
         Map<String, List<DBObject>> upsertMap = new HashMap<String, List<DBObject>>();
         try {
-            tx = channel.getTransaction();
-            tx.begin();
+            transaction = channel.getTransaction();
+            transaction.begin();
 
             for (int i = 0; i < batchSize; i++) {
                 Event event = channel.take();
@@ -243,21 +221,27 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
                 doUpsert(upsertMap);
             }
 
-            tx.commit();
-        } catch (Exception e) {
-            logger.error("can't process events, drop it!", e);
-            if (tx != null) {
-                tx.commit();// commit to drop bad event, otherwise it will enter dead loop.
+            transaction.commit();
+        } catch (Throwable t) {
+            try {
+                transaction.rollback();
+            } catch (Exception e) {
+                logger.error("Exception during transaction rollback.", e);
             }
-
-            throw new EventDeliveryException(e);
+            logger.error("Failed to commit transaction. Transaction rolled back.", t);
+            if (t instanceof Error || t instanceof RuntimeException) {
+                Throwables.propagate(t);
+            } else {
+                throw new EventDeliveryException("Failed to commit transaction. Transaction rolled back.", t);
+            }
         } finally {
-            if (tx != null) {
-                tx.close();
+            if (transaction != null) {
+                transaction.close();
             }
         }
         return status;
-    }
+    }*/
+/*
 
     private void doUpsert(Map<String, List<DBObject>> eventMap) {
         if (eventMap.isEmpty()) {
@@ -320,8 +304,9 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
             }
         }
     }
+*/
 
-    private void processEvent(Map<String, List<DBObject>> eventMap, Event event) {
+  /*  private void processEvent(Map<String, List<DBObject>> eventMap, Event event) {
         switch (model) {
             case SINGLE:
                 putSingleEvent(eventMap, event);
@@ -334,9 +319,20 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
             default:
                 logger.error("can't support model: {}, please check configuration.", model);
         }
+    }*/
+
+    private  void saveEventOneByOne(String jsonStr) throws Exception{
+
+        Document doc = Document.parse(jsonStr);
+        if(doc !=null){
+            logger.info("insert  document is {}" ,doc);
+            mongoCollection.insertOne(doc);
+        }
+
+
     }
 
-    private void putDynamicEvent(Map<String, List<DBObject>> eventMap, Event event) {
+   /* private void putDynamicEvent(Map<String, List<DBObject>> eventMap, Event event) {
         String eventCollection;
         Map<String, String> headers = event.getHeaders();
         String eventDb = headers.get(DB_NAME);
@@ -385,11 +381,11 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
             }
         }
         if (!event.getHeaders().containsKey(OPERATION) && timestampField != null) {
-            Date timestamp;
+            Date timestamp = new Date();
             if (eventJson.containsField(TIMESTAMP_FIELD)) {
                 try {
                     String dateText = (String) eventJson.get(TIMESTAMP_FIELD);
-                    timestamp = dateTimeFormatter.parseDateTime(dateText).toDate();
+                    //timestamp = dateTimeFormatter.parseDateTime(dateText).toDate();
                     eventJson.removeField(TIMESTAMP_FIELD);
                 } catch (Exception e) {
                     logger.error("can't parse date ", e);
@@ -415,5 +411,5 @@ public class MongoSinkwh extends AbstractSink implements Configurable {
 
     public enum CollectionModel {
         DYNAMIC, SINGLE
-    }
-}*/
+    }*/
+}

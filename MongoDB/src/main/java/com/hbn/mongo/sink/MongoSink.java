@@ -2,16 +2,10 @@ package com.hbn.mongo.sink;
 
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
-import com.hbn.common.Configs;
-import com.hbn.common.MongoConfig;
-import com.mongodb.MongoClientURI;
-import org.apache.commons.lang.StringUtils;
+import com.hbn.mongo.common.ConfigConstant;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.instrumentation.SinkCounter;
@@ -21,38 +15,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Throwables;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 
-import static com.hbn.mongo.sink.MongoSinkConstants.*;
 
 public class MongoSink extends AbstractSink implements Configurable {
 
 	private static final Logger logger = LoggerFactory.getLogger(MongoSink.class);
 
-	protected MongoClient client;
-	private MongoCollection<Document> collection;
-	private List<ServerAddress> seeds;
-	private MongoCredential credential;
-
-	private String databaseName;
-	private String collectionName;
-	private boolean authentication_enabled;
-
-	private int batchSize = DEFAULT_BATCH_SIZE;
-	private boolean DEFAULT_AUTHENTICATION_ENABLED = false;
-
 	private SinkCounter sinkCounter;
 
-	private MongoConfig  mongoConfig ;
+	private int batchSize ;
+
+	private MongoCollection<Document> mongoCollection;
+
+	private MongodbSinkHelper  mongodbSinkHelper ;
 
 
 	@Override
 	public Status process() throws EventDeliveryException {
+		logger.info("mongodb sink started  process ");
 		Status status = Status.READY;
-		List<Document> documents = new ArrayList<Document>(batchSize);
+		//List<Document> documents = new ArrayList<Document>(batchSize);
+		logger.info("mongosink batchsize  is {}",batchSize);
 		Channel channel = getChannel();
 		Transaction transaction = channel.getTransaction();
 		try {
@@ -61,33 +45,41 @@ public class MongoSink extends AbstractSink implements Configurable {
 			for (count = 0; count < batchSize; ++count) {
 				Event event = channel.take();
 				if (event == null) {
-					break;
+					continue;
 				}
 				//String cuTime = getCurrentTime();
 				String jsonEvent = new String(event.getBody(), StandardCharsets.UTF_8);
 				//TODO 根据不同的JSON 指定severId 插入不同的数据库
-				logger.info(jsonEvent);
+				//logger.info(jsonEvent);
 
 				//这里转化 可能会有异常  因为  给定的数据如果不是 json 格式 name转换就会有问题
 				/**
 				 * 如果一次转换不成功 ，继续转换也不会成功的 。
 				 * 因为是格式问题
 				 * 所以 直接 log
-				 *
 				 */
-				Document sentEvent = null ;
 
 				try {
-					sentEvent= Document.parse(jsonEvent);
-					System.out.println(sentEvent);
+					Document doc= Document.parse(jsonEvent);
+					//logger.info("Document  is {}",doc);
+					mongoCollection.insertOne(doc);
+					logger.info("mongo  insert doc is {}",doc);
 				}catch(Exception e){
-					logger.error("can't  parse  event  to  document  " ,e.toString(),event);
-
+					logger.error("can't  parse  event  to  document {}  event is {} " ,e.toString(),event);
 				}
-
-				documents.add(sentEvent);
 			}
-			if (count <= 0) {
+
+			//logger.info("documents  size  is {}",documents.size()  );
+			/*if(documents.size()>0){
+				if(mongoCollection ==null  ){
+					mongoCollection  = mongodbSinkHelper.getMongoCollection();
+				}
+				mongoCollection.insertMany(documents);
+				logger.info("mongosink  insertMany ");
+			}*/
+
+
+			/*if (count <= 0) {
 				sinkCounter.incrementBatchEmptyCount();
 				status = Status.BACKOFF;
 			} else {
@@ -98,12 +90,15 @@ public class MongoSink extends AbstractSink implements Configurable {
 					sinkCounter.incrementBatchCompleteCount();
 				}
 				sinkCounter.addToEventDrainAttemptCount(count);
-				collection.insertMany(documents);
+				mongoCollection.insertMany(documents);
 
-			}
+			}*/
+			/*事务的提交*/
 			transaction.commit();
 			sinkCounter.addToEventDrainSuccessCount(count);
+
 		} catch (Throwable t) {
+			logger.error("mongo sink  exception ");
 			try {
 				transaction.rollback();
 			} catch (Exception e) {
@@ -129,18 +124,12 @@ public class MongoSink extends AbstractSink implements Configurable {
 		logger.info("Starting MongoDB sink");
 		sinkCounter.start();
 		try {
-			client = new MongoClient(new MongoClientURI(mongoConfig.getCONNECTIONSTR()));
-			collection =client.getDatabase(databaseName).getCollection(collectionName);
-
 
 			sinkCounter.incrementConnectionCreatedCount();
 		} catch (Exception e) {
 			logger.error("Exception while connecting to MongoDB", e);
 			sinkCounter.incrementConnectionFailedCount();
-			if (client != null) {
-				client.close();
-				sinkCounter.incrementConnectionClosedCount();
-			}
+			sinkCounter.incrementConnectionClosedCount();
 		}
 		super.start();
 		logger.info("MongoDB sink started");
@@ -149,34 +138,31 @@ public class MongoSink extends AbstractSink implements Configurable {
 	@Override
 	public synchronized void stop() {
 		logger.info("Stopping MongoDB sink");
-		try{
-			if (client != null) {
-				client.close();
-			}
-			client = null ;
-		}catch ( Exception e){
-			throw new FlumeException("Error closing table.", e);
-		}
+		mongodbSinkHelper.stop();
 		sinkCounter.incrementConnectionClosedCount();
 		sinkCounter.stop();
+
+		super.stop();
 
 	}
 
 	@Override
 	public void configure(Context context) {
 		try {
-			System.out.println("系统 是否可以获取 " +context.getString(Configs.CONNECTIONSTR));
+			System.out.println("系统 是否可以获取 " +context.getString(ConfigConstant.CONNECTIONSTR));
 			if (sinkCounter == null) {
 				sinkCounter = new SinkCounter(getName());
 			}
-			if(mongoConfig == null){
-				mongoConfig = MongoConfig.getMongoConfig(context);
+			if(mongodbSinkHelper == null){
+				mongodbSinkHelper = new MongodbSinkHelper(context ,getName());
 			}
-			collectionName = mongoConfig.getTABLENAME();
-			databaseName = mongoConfig.getDATABASE();
-			batchSize = mongoConfig.getBatchSize();
+
+			mongoCollection = mongodbSinkHelper.getMongoCollection();
+			batchSize = mongodbSinkHelper.getBatchSize();
+			logger.info("already  init ,batchsize is {} mongoCollection is {} " ,batchSize ,mongoCollection.count());
 		}catch (Exception e){
 			logger.error(e.toString());
+			logger.error("init  configure  failed");
 		}
 
 	}

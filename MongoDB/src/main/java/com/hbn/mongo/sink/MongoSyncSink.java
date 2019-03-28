@@ -1,7 +1,6 @@
 package com.hbn.mongo.sink;
 
-import com.hbn.common.Configs;
-import com.hbn.common.MongoConfig;
+import com.hbn.mongo.common.MongoConfig;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
@@ -9,11 +8,8 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import org.apache.flume.Context;
 import org.apache.flume.EventDeliveryException;
-import org.apache.flume.FlumeException;
-import org.apache.flume.conf.BatchSizeSupported;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.instrumentation.SinkCounter;
-import org.apache.flume.sink.AbstractSink;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +48,7 @@ public class MongoSyncSink extends MongoSink implements Configurable  {
     private SinkCounter sinkCounter;
 
     private MongoConfig mongoConfig ;
+    private MongoClient client;
 
     @Override
     public void configure(Context context) {

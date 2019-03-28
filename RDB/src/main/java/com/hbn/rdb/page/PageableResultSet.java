@@ -27,7 +27,8 @@ package com.hbn.rdb.page;
  **/
 
 
-import com.hbn.rdb.common.DriverQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -41,24 +42,33 @@ public class PageableResultSet implements Pageable {
 
 
 
+    private static final Logger logger = LoggerFactory.getLogger(PageableResultSet.class);
+
+
     protected java.sql.ResultSet rs=null;
     protected int rowsCount;
     protected int pageSize;
     protected int curPage;
 
 
-    public PageableResultSet(java.sql.ResultSet rs ,int newRowsCount) throws java.sql.SQLException {
+    public PageableResultSet(java.sql.ResultSet rs ,Boolean isOracle ,int rowsCount) throws java.sql.SQLException {
         if(rs==null) throw new SQLException("given ResultSet is NULL","user");
-        if(false){
+        if(!isOracle){
             rs.last();
-            rowsCount=rs.getRow();
-            System.out.println(rowsCount);
+            this.rowsCount=rs.getRow();
             rs.beforeFirst();
+            this.rs =rs;
+        }else {
+            this.rowsCount =rowsCount ;
+            this.rs=rs;
         }
 
-        this.rowsCount = newRowsCount;
+        logger.info(" init PageableResultSet succuss ");
+        logger.info("rowcount in PageableResultSet is {}",this.rowsCount);
+        logger.info("rs  in PageableResultSet is ok ? {}",this.rs != null);
 
-        this.rs=rs;
+
+
 
     }
 

@@ -1,14 +1,6 @@
 /*
+
 package com.hbn.mongo.sink;
-
-*/
-/**
- * @author wangheng
- * @create 2019-01-09 下午9:39
- * @desc
- **//*
-
-
 
 
         import java.net.UnknownHostException;
@@ -45,6 +37,15 @@ package com.hbn.mongo.sink;
         import com.mongodb.MongoException;
         import com.mongodb.WriteConcern;
         import com.mongodb.util.JSON;
+
+
+*/
+/**
+ * @author wangheng
+ * @create 2019-01-09 下午9:39
+ * @desc
+ **//*
+
 
 
 public class MongoSinks extends AbstractSink implements Configurable {
@@ -128,7 +129,7 @@ public class MongoSinks extends AbstractSink implements Configurable {
             username = "";
             password = "";
         }
-        model = CollectionModel.valueOf(context.getString(MODEL, CollectionModel.SINGLE.name()));
+        model = MongoSinkwh.CollectionModel.valueOf(context.getString(MODEL, CollectionModel.SINGLE.name()));
         dbName = context.getString(DB_NAME, DEFAULT_DB);
         collectionName = context.getString(COLLECTION, DEFAULT_COLLECTION);
         batchSize = context.getInteger(BATCH_SIZE, DEFAULT_BATCH);
@@ -145,9 +146,7 @@ public class MongoSinks extends AbstractSink implements Configurable {
         try {
             mongo = new Mongo(host, port);
             db = mongo.getDB(dbName);
-        } catch (UnknownHostExce*/
-/**//*
-ption e) {
+        } catch (UnknownHostException e) {
             logger.error("Can't connect to mongoDB", e);
             return;
         }

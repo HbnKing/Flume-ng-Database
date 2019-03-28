@@ -1,0 +1,83 @@
+# 指定Agent的组件名称
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+# 指定Flume source(需要监听的数据源)
+# 连接的配置信息 必须配置
+a1.sources.r1.type = com.hbn.rdb.source.SQLSource
+a1.sources.r1.connectionstr = jdbc:mysql://192.168.3.130:3306/test
+a1.sources.r1.user = hive
+a1.sources.r1.password = hive
+a1.sources.r1.driverclass= com.mysql.cj.jdbc.Driver
+
+#表名  自增字段  起始位置 还有查询列名(队列 请使用sql语句分割符分开 )
+a1.sources.r1.table = classname
+a1.sources.r1.autoincrementfield = id
+a1.sources.r1.begin = 2
+# 列名 该值 不配置 会 取 所有列名  请将主键 包含在查询结果中
+a1.sources.r1.columnstoselect = id,age,sex
+#a1.sources.r1.columnstoselect = id
+
+# Status file is used to save last readed row
+# 中间状态保存
+#a1.sources.filepath = /var/log/flume1
+#a1.sources.filename = sqlSource.status
+
+#每次 吐出量 与 内存有关
+a1.sources.batchsize = 1000
+
+# Custom query  自定义 语句  需要配置 自增字段起点位置 排序,和 限制输出。
+a1.sources.customquery = select * from table  where id > $@$  order by  id limit 100 offset 0 ;
+#a1.sources.customquery = select * from  newtable  where id > 189705730   order by  id limit 100   ;
+a1.sources.r1.begin = 2
+
+##  here is  mongodb sink
+
+# 指定Flume sink
+a1.sinks.k1.type = com.hbn.mongo.sink.MongoSink
+a1.sinks.k1.connectionstr =mongodb://192.168.3.130,192.168.3.131,192.168.3.132/test
+a1.sinks.k1.db = newdb
+a1.sinks.k1.collection = newcollcection
+a1.sinks.k1.batchsize =1000
+
+
+#a1.sinks.k1.type = null
+#a1.sinks.k1.channel = c1
+
+#a1.channels = c1
+#a1.sinks = k1
+#a1.sinks.k1.type = logger
+#a1.sinks.k1.channel = c1
+a1.channels = c1
+a1.sinks = k1
+a1.sinks.k1.type = hdfs
+a1.sinks.k1.channel = c1
+a1.sinks.k1.hdfs.path = /user/events/
+a1.sinks.k1.hdfs.writeFormat =Text
+# 指定Flume channel
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+# 绑定source和sink到channel上
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+
+
+
+
+
+a1.channels = c1
+a1.sinks = k1
+a1.sinks.k1.type = logger
+a1.sinks.k1.channel = c1
+
+# 指定Flume channel
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+# 绑定source和sink到channel上
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1

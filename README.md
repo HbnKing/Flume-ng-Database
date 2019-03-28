@@ -60,3 +60,5 @@ flume 批量发送 单条发送事务性  及 配置
 解析类型为 Date 和 timestamp  可能存在的风险  
 json 插入数据库 
 
+自增字段  的通用性   时间 整型  转为object?
+

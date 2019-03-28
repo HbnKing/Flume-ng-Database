@@ -93,8 +93,9 @@ public class DriverQuery {
         return result ;
     }
 
-    public ResultSet executeQuery(String sql){
+    public ResultSet executeQuery(String sql ,boolean  flag){
 
+        if( flag ){
         ResultSet  rs = executeQuerySQL(sql);
         int rowNum = 0 ;
         try {
@@ -117,7 +118,10 @@ public class DriverQuery {
         }
 
         return rs ;
-
+        }else {
+            ResultSet  rs = executeQuerySQL(sql);
+            return rs ;
+        }
 
     }
 

@@ -29,7 +29,7 @@ public class PageModule {
     public static void PageTest() throws SQLException {
 
         ResultSet resultSet = JdbcConnectionTest.getConnection();
-        PageableResultSet pageableResultSet = new PageableResultSet(resultSet,100);
+        PageableResultSet pageableResultSet = new PageableResultSet(resultSet,false,100);
 
         pageableResultSet.setPageSize(1000);
 

@@ -20,6 +20,7 @@ public class SQLSourceHelper {
 
   private static final Logger logger = LoggerFactory.getLogger(SQLSourceHelper.class);
 
+  private static Boolean isOracle = false ;
   //数据库 连接信息
   //没有的值 就设置为null
   private static String drivername = null ;
@@ -161,6 +162,10 @@ public class SQLSourceHelper {
     batchsize = context.getInteger(ConfigConstant.BATCH_SIZE ,ConfigConstant.DEFAULT_BATCH_SIZE);
 
 
+    isOracle = drivername.toLowerCase().contains("oracle");
+
+    logger.info( "db  is oracle {}",isOracle);
+
 
   }
 
@@ -287,8 +292,10 @@ public class SQLSourceHelper {
   public ResultSet executeQuery(){
     String sql  = buildQuery();
 
-    return driverQuery.executeQuery(sql);
+    return driverQuery.executeQuery(sql , isOracle);
   }
+
+
 
   public int getRowCount(){
     return driverQuery.getRowCount();
@@ -300,7 +307,7 @@ public class SQLSourceHelper {
   private PageableResultSet getPageableResultSet() throws SQLException {
     // 第一次请求
     if(pageableResultSet==null){
-      pageableResultSet = new PageableResultSet(executeQuery(),getRowCount());
+      pageableResultSet = new PageableResultSet(executeQuery(),isOracle,getRowCount());
       pageableResultSet.setPageSize(batchsize);
     }
     return pageableResultSet;
