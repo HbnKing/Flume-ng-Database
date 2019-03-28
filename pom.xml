@@ -126,11 +126,13 @@
         <xerces.version>2.9.1</xerces.version>
         <wiremock.version>1.53</wiremock.version>
         <zookeeper.version>3.4.5</zookeeper.version>
-        <!--修改 各个环境驱动版本的位置 -->
-        <mysql.driver.version>6.0.5</mysql.driver.version>
+        <!-- 引入的依赖-->
         <flume.version>1.9.0</flume.version>
         <fastjson.version>1.2.49</fastjson.version>
-        <!--mongodb 一套东西 -->
+        <!--数据库的驱动 -->
+        <!--修改各个环境驱动版本的位置  测试  -->
+        <mysql.driver.version>6.0.5</mysql.driver.version>
+        <oracle.driver.version>11.2.0.3</oracle.driver.version>
     </properties>
 
     <dependencyManagement>
@@ -150,36 +152,6 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <!-- 日志 -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jcl</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
     </dependencies>
     </dependencyManagement>
 </project>
