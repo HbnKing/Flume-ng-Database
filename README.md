@@ -45,7 +45,7 @@ $ cp RDB-O.O.1.jar $FLUME_HOME/lib
 
 
 ## 配置文件样例
-RDB 配置文件 [详见](./RDB/src/conf/Source-conf-low)
+RDB 配置文件 [详见](./RDB/src/conf)
 
 
 ## 必须配置 
@@ -54,3 +54,9 @@ RDB 配置文件 [详见](./RDB/src/conf/Source-conf-low)
 
 ## 鸣谢
 感谢 大佬们的付出 思想源于[github](https://github.com/keedio/flume-ng-sql-source) 
+
+## 需要帮助  
+flume 批量发送 单条发送事务性  及 配置  
+解析类型为 Date 和 timestamp  可能存在的风险  
+json 插入数据库 
+
