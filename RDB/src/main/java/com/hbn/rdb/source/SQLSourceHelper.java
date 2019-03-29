@@ -69,11 +69,11 @@ public class SQLSourceHelper {
 
   //每一个sqlsource 内设置一个内部对象 保存该类的 数据库级别的连接信息
 
-  com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
+  private static com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
 
-  DriverQuery driverQuery = new DriverQuery() ;
+  private static DriverQuery driverQuery = new DriverQuery() ;
 
-  PageableResultSet  pageableResultSet = null ;
+  private static PageableResultSet  pageableResultSet = null ;
 
 
 
@@ -98,25 +98,25 @@ public class SQLSourceHelper {
 
     this.sourceName = sourceName;
     //起点
-    begin = context.getLong(ConfigConstant.BEGINNING,0L);
-    logger.info("begin  is  {}",begin );
+    this.begin = context.getLong(ConfigConstant.BEGINNING,0L);
+    this.logger.info("begin  is  {}",begin );
 
     //自己写的sql 如果有定义 取其值 否则为 null
-    customerquery = context.getString(ConfigConstant.CUSTOMQUERY);
+    this.customerquery = context.getString(ConfigConstant.CUSTOMQUERY);
 
     logger.info("customerquery  is  {}" ,customerquery);
 
     //多个参数配的sql
-    table = context.getString(ConfigConstant.TABLE);
-    columnsToSelect = context.getString(ConfigConstant.COLUMNS_TO_SELECT,ConfigConstant.DEFAULT_COLUMNS_TO_SELECT);
-    autoIncrementField = context.getString(ConfigConstant.AUTOINCREMENTFIELD);
+    this.table = context.getString(ConfigConstant.TABLE);
+    this.columnsToSelect = context.getString(ConfigConstant.COLUMNS_TO_SELECT,ConfigConstant.DEFAULT_COLUMNS_TO_SELECT);
+    this.autoIncrementField = context.getString(ConfigConstant.AUTOINCREMENTFIELD);
 
     logger.info("table  is  {}",table);
     logger.info("columnsToSelect  is  {}",columnsToSelect);
     logger.info("autoIncrementField  is  {}",autoIncrementField);
 
 
-    Charset = context.getString(ConfigConstant.CHARSET_RESULTSET, ConfigConstant.DEFAULT_CHARSET_RESULTSET);
+    this.Charset = context.getString(ConfigConstant.CHARSET_RESULTSET, ConfigConstant.DEFAULT_CHARSET_RESULTSET);
     logger.info("charset  is  {}",Charset);
 
     //query = buildQuery();
@@ -124,11 +124,11 @@ public class SQLSourceHelper {
      * 数据库连接配置
      */
 
-    drivername = context.getString(ConfigConstant.DRIVER);
+    this.drivername = context.getString(ConfigConstant.DRIVER);
 
-    username = context.getString(ConfigConstant.USER);
-    password = context.getString(ConfigConstant.PASSWORD);
-    conectionurl = context.getString(ConfigConstant.URL);
+    this.username = context.getString(ConfigConstant.USER);
+    this.password = context.getString(ConfigConstant.PASSWORD);
+    this.conectionurl = context.getString(ConfigConstant.URL);
     logger.info("connectionurl  is  {}",conectionurl);
     logger.info("driver  is  {}",drivername);
 
@@ -146,8 +146,8 @@ public class SQLSourceHelper {
     //driverQuery.init(RDBconfig);
 
     //中间文件状态 资料
-    filePath = context.getString(ConfigConstant.FILEPATH,ConfigConstant.DEFAULT_FILEPATH);
-    fileName = context.getString(ConfigConstant.FILENAME,ConfigConstant.DEFAULT_FILENAME);
+    this.filePath = context.getString(ConfigConstant.FILEPATH,ConfigConstant.DEFAULT_FILEPATH);
+    this.fileName = context.getString(ConfigConstant.FILENAME,ConfigConstant.DEFAULT_FILENAME);
 
     logger.info("filePath is  {}",filePath);
     logger.info("fileName is  {}",fileName);
@@ -155,14 +155,14 @@ public class SQLSourceHelper {
 
     //更新 currentIndex
     //比较 起点  和  当前值 的最大值
-    currentIndex = Math.max(begin ,getCurrentIndexStatusFile());
+    this.currentIndex = Math.max(begin ,getCurrentIndexStatusFile());
     logger.info("Index  started  from  {}" ,currentIndex);
 
     //  分页信息
-    batchsize = context.getInteger(ConfigConstant.BATCH_SIZE ,ConfigConstant.DEFAULT_BATCH_SIZE);
+    this.batchsize = context.getInteger(ConfigConstant.BATCH_SIZE ,ConfigConstant.DEFAULT_BATCH_SIZE);
 
 
-    isOracle = drivername.toLowerCase().contains("oracle");
+    this.isOracle = drivername.toLowerCase().contains("oracle");
 
     logger.info( "db  is oracle {}",isOracle);
 
@@ -172,34 +172,34 @@ public class SQLSourceHelper {
 
   public void checkMandatoryProperties() {
 
-    if (conectionurl == null) {
+    if (this.conectionurl == null) {
       throw new ConfigurationException("database - connection - url property not set");
     }
 
-    if (table == null && customerquery == null) {
+    if (this.table == null && this.customerquery == null) {
       throw new ConfigurationException("property table not set");
     }
 
-    if (username == null) {
+    if (this.username == null) {
       throw new ConfigurationException("database - connection - user property not set");
     }
 
-    if (password == null) {
+    if (this.password == null) {
       throw new ConfigurationException("database - connection - password property not set");
     }
   }
 
   public String buildQuery() {
 
-    if (customerquery == null) {
+    if (this.customerquery == null) {
       // 如果 customerQuery 为null，就以 offsest 作为 id
-      return "SELECT " + columnsToSelect + " FROM " + table +" where " +autoIncrementField + " > " +currentIndex ;
+      return "SELECT " + this.columnsToSelect + " FROM " + this.table +" where " +this.autoIncrementField + " > " +this.currentIndex ;
     } else {
       //如果 customerquery 不为 null，那么就要将其最后已存在的 offset 替换掉新查询出的 offset（！！！）
       //
-      if (customerquery.contains("$@$")) {
+      if (this.customerquery.contains("$@$")) {
         //直接修改  返回行新的 sql 语句
-        return customerquery.replace("$@$", String.valueOf(currentIndex));
+        return this.customerquery.replace("$@$", String.valueOf(currentIndex));
       } else {
         //如果没有设置
         // currentIndex  应该为 begin  默认值 Long.MIN_VALUE
@@ -207,7 +207,7 @@ public class SQLSourceHelper {
         /*if(currentIndex.equals(Long.MIN_VALUE)){
           return customerquery = customerquery.substring(0,customerquery.indexOf(">")+1)+currentIndex;
         }else return customerquery ;*/
-        return customerquery ;
+        return this.customerquery ;
 
       }
     }
@@ -292,7 +292,7 @@ public class SQLSourceHelper {
   public ResultSet executeQuery(){
     String sql  = buildQuery();
 
-    return driverQuery.executeQuery(sql , isOracle);
+    return driverQuery.executeQuery(sql , this.isOracle);
   }
 
 
@@ -306,11 +306,11 @@ public class SQLSourceHelper {
 
   private PageableResultSet getPageableResultSet() throws SQLException {
     // 第一次请求
-    if(pageableResultSet==null){
-      pageableResultSet = new PageableResultSet(executeQuery(),isOracle,getRowCount());
-      pageableResultSet.setPageSize(batchsize);
+    if(this.pageableResultSet==null){
+      this.pageableResultSet = new PageableResultSet(executeQuery(),this.isOracle,getRowCount());
+      this.pageableResultSet.setPageSize(this.batchsize);
     }
-    return pageableResultSet;
+    return this.pageableResultSet;
 
   }
 
@@ -355,7 +355,7 @@ public class SQLSourceHelper {
         getNextPageableResultSet();
       }
 
-      return pageableResultSet ;
+      return this.pageableResultSet ;
 
     }
 

@@ -25,7 +25,7 @@ public class JdbcConnectionTest {
        /* PageableResultSet pageableResultSet = new PageableResultSet(JdbcConnectionTest.getOrcaleConnection());
         pageableResultSet.setPageSize(1000);
         System.out.println(pageableResultSet.getPageCount());*/
-       ResultSet  rs = JdbcConnectionTest.getOrcaleConnection();
+        ResultSet  rs = JdbcConnectionTest.getOrcaleConnection();
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 

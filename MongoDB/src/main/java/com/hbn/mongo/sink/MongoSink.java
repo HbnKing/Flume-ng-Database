@@ -35,7 +35,7 @@ public class MongoSink extends AbstractSink implements Configurable {
 	public Status process() throws EventDeliveryException {
 		logger.info("mongodb sink started  process ");
 		Status status = Status.READY;
-		//List<Document> documents = new ArrayList<Document>(batchSize);
+		List<Document> documents = new ArrayList<Document>(batchSize);
 		logger.info("mongosink batchsize  is {}",batchSize);
 		Channel channel = getChannel();
 		Transaction transaction = channel.getTransaction();
@@ -61,16 +61,17 @@ public class MongoSink extends AbstractSink implements Configurable {
 
 				try {
 					Document doc= Document.parse(jsonEvent);
-					//logger.info("Document  is {}",doc);
+
+					//documents.add(doc);
 					mongoCollection.insertOne(doc);
-					logger.info("mongo  insert doc is {}",doc);
+					//logger.info("mongo  insert doc is {}",doc);
 				}catch(Exception e){
 					logger.error("can't  parse  event  to  document {}  event is {} " ,e.toString(),event);
 				}
 			}
 
-			//logger.info("documents  size  is {}",documents.size()  );
-			/*if(documents.size()>0){
+			/*logger.info("documents  size  is {}",documents.size()  );
+			if(documents.size()>0){
 				if(mongoCollection ==null  ){
 					mongoCollection  = mongodbSinkHelper.getMongoCollection();
 				}
@@ -150,15 +151,15 @@ public class MongoSink extends AbstractSink implements Configurable {
 	public void configure(Context context) {
 		try {
 			System.out.println("系统 是否可以获取 " +context.getString(ConfigConstant.CONNECTIONSTR));
-			if (sinkCounter == null) {
-				sinkCounter = new SinkCounter(getName());
+			if (this.sinkCounter == null) {
+				this.sinkCounter = new SinkCounter(getName());
 			}
-			if(mongodbSinkHelper == null){
-				mongodbSinkHelper = new MongodbSinkHelper(context ,getName());
+			if(this.mongodbSinkHelper == null){
+				this.mongodbSinkHelper = new MongodbSinkHelper(context ,getName());
 			}
 
-			mongoCollection = mongodbSinkHelper.getMongoCollection();
-			batchSize = mongodbSinkHelper.getBatchSize();
+			this.mongoCollection = mongodbSinkHelper.getMongoCollection();
+			this.batchSize = mongodbSinkHelper.getBatchSize();
 			logger.info("already  init ,batchsize is {} mongoCollection is {} " ,batchSize ,mongoCollection.count());
 		}catch (Exception e){
 			logger.error(e.toString());

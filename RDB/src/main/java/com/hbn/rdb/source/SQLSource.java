@@ -72,7 +72,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
      */
 	@Override
 	public Status process() throws EventDeliveryException {
-        Status status = null;
+        Status status = Status.BACKOFF;
 
         logger.info("started  process   rdb Source");
 
@@ -338,6 +338,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                     jsonObj.put(columnName+"_"+i,value);
                 }else {
                     jsonObj.put(columnName,value);
+
                 }
             }
 
@@ -373,7 +374,8 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         /*counter*/
         sqlSourceCounter.incrementEventCount(counter);
         sqlSourceCounter.endProcess(counter);
-        return Status.READY;
+        status = Status.READY ;
+        return status;
     }
     
 
