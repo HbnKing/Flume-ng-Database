@@ -18,6 +18,7 @@ RDB  常见关系型数据库（mysql  oracle  pg）
 | 数据源  | source | sink |版本 |
 | ------ | ------ | ------ | ------ |
 | RDB| S |  X| 0.0.1 |
+| Mongodb| x |  S| 0.0.1 |
 
 
 
