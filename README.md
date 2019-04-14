@@ -54,9 +54,13 @@ RDB 配置文件 [详见](./RDB/src/conf)
 Mongodb 配置文件[详见](./MongoDB/src/conf/Sink_conf_demo1)
 
 
-## 必须配置 
+## 配置说明表  
 
-## 常见问题 
+## 常见问题  
+如有问题请留言上报 ,个人只测试了 mysql  和 oracle  mongodb 
+
+觉得还行给个星呗,有需求可以提出来,欢迎一起来开发。
+
 
 ## 鸣谢
 感谢 大佬们的付出 思想源于[github](https://github.com/keedio/flume-ng-sql-source) 
@@ -67,4 +71,6 @@ flume 批量发送 单条发送事务性  及 配置
 json 插入数据库 
 
 自增字段  的通用性   时间 整型  转为object?
+
+
 
