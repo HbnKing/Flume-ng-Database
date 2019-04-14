@@ -18,47 +18,47 @@ import java.util.Map;
 
 public class SQLSourceHelper {
 
-  private static final Logger logger = LoggerFactory.getLogger(SQLSourceHelper.class);
+  private final Logger logger = LoggerFactory.getLogger(SQLSourceHelper.class);
 
-  private static Boolean isOracle = false ;
+  private Boolean isOracle = false ;
   //数据库 连接信息
   //没有的值 就设置为null
-  private static String drivername = null ;
-  private static String conectionurl = null ;
-  private static String username = null ;
-  private static String password = null ;
+  private String drivername = null ;
+  private String conectionurl = null ;
+  private String username = null ;
+  private String password = null ;
   //表库 级别 的相关信息
-  //private static String dbname = null ;
+  //private String dbname = null ;
 
   //个性化sql部分
-  
-  private static String customerquery = null ;
 
-  private static long begin = 0l;
+  private String customerquery = null ;
+
+  private long begin = 0l;
   //  select id,field   from  table name  where  id  >=begin ;
   //这里需要 查询列名  表明  自增列名 ,该列的起始值
-  private static String columnsToSelect = null ;
-  private static String table = null ;
-  private static String autoIncrementField = null ;
+  private String columnsToSelect = null ;
+  private String table = null ;
+  private String autoIncrementField = null ;
 
   // 生成的sql
-  private static String query = null ;
+  private String query = null ;
 
 
   //中间文件状态记录
   //文件位置 和文件名称
-  private static String filePath = null ;
-  private static String fileName = null ;
+  private String filePath = null ;
+  private String fileName = null ;
 
 
 
   //通用配置
-  private static  String Charset = null ;
+  private  String Charset = null ;
   //当前最大值 currentIndex
   //比较 来源 1  begin  2  filestatus 3  内存迭代更新
   //修改频繁要求较高  可以优化
 
-  private static Long currentIndex ;
+  private Long currentIndex ;
 
   //其他
   private String sourceName ;
@@ -69,15 +69,15 @@ public class SQLSourceHelper {
 
   //每一个sqlsource 内设置一个内部对象 保存该类的 数据库级别的连接信息
 
-  private static com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
+  private com.hbn.rdb.common.RDBconfig RDBconfig = new RDBconfig();
 
-  private static DriverQuery driverQuery = new DriverQuery() ;
+  private DriverQuery driverQuery = new DriverQuery() ;
 
-  private static PageableResultSet  pageableResultSet = null ;
+  private PageableResultSet  pageableResultSet = null ;
 
 
 
-  private static int batchsize;
+  private int batchsize;
 
   /**
    * Builds an SQLSourceHelper containing the configuration parameters and
@@ -256,7 +256,7 @@ public class SQLSourceHelper {
   }
 
   public void setBatchsize(int batchsize) {
-    SQLSourceHelper.batchsize = batchsize;
+    this.batchsize = batchsize;
   }
 
   public String getautoIncrementField(){
@@ -330,7 +330,7 @@ public class SQLSourceHelper {
 
 
   //当前页面
-  private static  int  curPage = 1 ;
+  private  int  curPage = 1 ;
 
   /**
    * 获取初始页面

@@ -19,12 +19,12 @@ import java.util.List;
 
 
 public class SQLSource extends AbstractSource implements Configurable, PollableSource {
-    private static final Logger logger = LoggerFactory.getLogger(SQLSource.class);
+    private  final Logger logger = LoggerFactory.getLogger(SQLSource.class);
 
     //currentIndex  保存当前最大值
-    private static  volatile  long  currentIndex  = Long.MIN_VALUE ;
+    private  volatile  long  currentIndex  = Long.MIN_VALUE ;
     //自增字段 名称
-    private static  volatile  String autoIncrementField = null ;
+    private  volatile  String autoIncrementField = null ;
     //sqlsource helper
     private SQLSourceHelper sqlSourceHelper;
     //sqlSourceCounter

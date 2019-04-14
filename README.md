@@ -38,15 +38,20 @@ cd  RDB
 $ mvn package
 $ cp RDB-O.O.1.jar $FLUME_HOME/lib
 
+cd MongoDB
+....同上
+
 ```
-其他 
-需要 alibaba fastjson-1.2.49  数据库驱动
+其他 Mysql  日志级别 同步还未完成  
+需要 alibaba fastjson-1.2.49 及 数据库驱动
+
 
 
 
 
 ## 配置文件样例
 RDB 配置文件 [详见](./RDB/src/conf)
+Mongodb 配置文件[详见](./MongoDB/src/conf/Sink_conf_demo1)
 
 
 ## 必须配置 

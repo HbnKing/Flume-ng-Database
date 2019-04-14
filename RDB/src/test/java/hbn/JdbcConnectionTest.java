@@ -25,7 +25,7 @@ public class JdbcConnectionTest {
        /* PageableResultSet pageableResultSet = new PageableResultSet(JdbcConnectionTest.getOrcaleConnection());
         pageableResultSet.setPageSize(1000);
         System.out.println(pageableResultSet.getPageCount());*/
-        ResultSet  rs = JdbcConnectionTest.getOrcaleConnection();
+        ResultSet  rs = JdbcConnectionTest.getConnection();
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 
@@ -33,10 +33,12 @@ public class JdbcConnectionTest {
 
             for(int i = 1 ; i<=columnCount ; i ++){
 
-                System.out.println(metaData.getColumnLabel(i)+" : "+i +" : "+ rs.getObject(i) );
+                System.out.println(metaData.getColumnLabel(i)+" : "+i +" : "+ rs.getObject(i)   +" class " );
+                if(i == 12){
+                    System.out.println(rs.getObject(i).getClass());
+                }
             }
        }
-
 
     }
 
@@ -67,7 +69,7 @@ public class JdbcConnectionTest {
     public static ResultSet  getConnection() throws SQLException {
         logger.info("started ");
         RDBconfig rdBconfig = new RDBconfig();
-        rdBconfig.setUrl("jdbc:mysql://192.168.3.130:3306/test");
+        rdBconfig.setUrl("jdbc:mysql://121.201.68.63:13306/demo");
         rdBconfig.setDbpassword("root");
         rdBconfig.setDbuser("root");
         rdBconfig.setDriverclass("com.mysql.cj.jdbc.Driver");
@@ -75,7 +77,8 @@ public class JdbcConnectionTest {
         DriverQuery driverQuery = new DriverQuery();
         driverQuery.init(rdBconfig);
         driverQuery.createConnection();
-        //ResultSet resultSet = driverQuery.executeQuery("select * from newtable");
-        return  null ;
+        ResultSet resultSet = driverQuery.executeQuery("select * from new_table",false);
+        System.out.println("is end");
+        return  resultSet ;
     }
 }

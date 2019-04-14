@@ -20,11 +20,13 @@ import java.sql.*;
  **/
 public class DriverQuery {
 
-    private  static Logger logger = LoggerFactory.getLogger(DriverQuery.class);
+    private  static  final Logger logger = LoggerFactory.getLogger(DriverQuery.class);
 
-    private  static Connection connection = null ;
-    private  static PreparedStatement statement = null ;
-    private  static ResultSet resultSet = null;
+    private   Connection connection = null ;
+    private   PreparedStatement statement = null ;
+    private   ResultSet resultSet = null;
+
+
 
 
     public int getRowCount() {
