@@ -63,7 +63,7 @@ Mongodb 配置文件[详见](./MongoDB/src/conf/Sink_conf_demo1)
 
 
 ## 鸣谢
-感谢 大佬们的付出 思想源于[github](https://github.com/keedio/flume-ng-sql-source) 
+感谢 大佬们的付出 思想源于[keedio](https://github.com/keedio/flume-ng-sql-source) 
 
 ## 需要帮助  
 flume 批量发送 单条发送事务性  及 配置  
