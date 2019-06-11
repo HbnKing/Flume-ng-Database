@@ -11,6 +11,7 @@
 
     <artifactId>RDB</artifactId>
     <properties>
+        <!--已经在父类pom中配置-->
         <mysql.driver.version>6.0.5</mysql.driver.version>
     </properties>
     <dependencies>
@@ -26,20 +27,20 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <!--<version>1.2.49</version>-->
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.7</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -54,15 +55,15 @@
             <version>${oracle.driver.version}</version>
         </dependency>
     </dependencies>
-    <build>
+ <build>
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.1</version>
             <configuration>
-                <source>1.7</source>
-                <target>1.7</target>
+                <source>${sourceJavaVersion}</source>
+                <target>${targetJavaVersion}</target>
             </configuration>
         </plugin>
         <plugin>
@@ -116,5 +117,7 @@
             </executions>
         </plugin>
     </plugins>
-</build>
+
+
+    </build>
 </project>
