@@ -1,6 +1,5 @@
 package com.hbn.rdb.common;
 
-import org.apache.velocity.texen.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
