@@ -52,11 +52,11 @@ public class PageableResultSet implements Pageable {
 
 
     public PageableResultSet(java.sql.ResultSet rs ,Boolean isOracle ,int rowsCount) throws java.sql.SQLException {
-        if(rs==null) throw new SQLException("given ResultSet is NULL","user");
+        if(this.rs==null) throw new SQLException("given ResultSet is NULL","user");
         if(!isOracle){
-            rs.last();
+            this.rs.last();
             this.rowsCount=rs.getRow();
-            rs.beforeFirst();
+            this.rs.beforeFirst();
             this.rs =rs;
         }else {
             this.rowsCount =rowsCount ;
@@ -66,9 +66,6 @@ public class PageableResultSet implements Pageable {
         logger.info(" init PageableResultSet succuss ");
         logger.info("rowcount in PageableResultSet is {}",this.rowsCount);
         logger.info("rs  in PageableResultSet is ok ? {}",this.rs != null);
-
-
-
 
     }
 
@@ -108,7 +105,7 @@ public class PageableResultSet implements Pageable {
 
     @Override
     public void gotoPage(int page) {
-        if (rs == null)
+        if (this.rs == null)
             return;
         if (page < 1)
             page = 1;
@@ -116,7 +113,7 @@ public class PageableResultSet implements Pageable {
             page = getPageCount();
         int row = (page - 1) * pageSize + 1;
         try {
-            rs.absolute(row);
+            this.rs.absolute(row);
             curPage = page;
         }
         catch (java.sql.SQLException e) {
@@ -128,14 +125,14 @@ public class PageableResultSet implements Pageable {
     @Override
     public void pageFirst() throws SQLException {
         int row=(curPage-1)*pageSize+1;
-        rs.absolute(row);
+        this.rs.absolute(row);
 
     }
 
     @Override
     public void pageLast() throws SQLException {
         int row=(curPage-1)*pageSize+getPageRowsCount();
-        rs.absolute(row);
+        this.rs.absolute(row);
 
 
     }
@@ -151,295 +148,295 @@ public class PageableResultSet implements Pageable {
 
     @Override
     public boolean next() throws SQLException {
-        return rs.next();
+        return this.rs.next();
     }
 
     @Override
     public boolean absolute(int row) throws SQLException {
-        return rs.absolute(row);
+        return this.rs.absolute(row);
     }
 
     @Override
     public void afterLast() throws SQLException {
-        rs.afterLast();
+        this.rs.afterLast();
 
     }
 
     @Override
     public void beforeFirst() throws SQLException {
-        rs.beforeFirst();
+        this.rs.beforeFirst();
 
     }
 
     @Override
     public void cancelRowUpdates() throws SQLException {
-        rs.cancelRowUpdates();
+        this.rs.cancelRowUpdates();
     }
 
     @Override
     public void clearWarnings() throws SQLException {
-        rs.clearWarnings();
+        this.rs.clearWarnings();
 
     }
 
     @Override
     public void close() throws SQLException {
-        rs.close();
+        this.rs.close();
 
     }
 
     @Override
     public void deleteRow() throws SQLException {
-        rs.deleteRow();
+        this.rs.deleteRow();
 
     }
 
     @Override
     public int findColumn(String columnName) throws SQLException {
-        return rs.findColumn(columnName);
+        return this.rs.findColumn(columnName);
     }
 
     @Override
     public boolean first() throws SQLException {
-        return rs.first();
+        return this.rs.first();
     }
 
     @Override
     public Array getArray(int i) throws SQLException {
-        return rs.getArray(i);
+        return this.rs.getArray(i);
     }
 
     @Override
     public Array getArray(String colName) throws SQLException {
-        return rs.getArray(colName);
+        return this.rs.getArray(colName);
     }
 
     @Override
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
-        return rs.getAsciiStream(columnIndex);
+        return this.rs.getAsciiStream(columnIndex);
     }
 
     @Override
     public InputStream getAsciiStream(String columnName) throws SQLException {
-        return rs.getAsciiStream(columnName);
+        return this.rs.getAsciiStream(columnName);
     }
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        return rs.getBigDecimal(columnIndex);
+        return this.rs.getBigDecimal(columnIndex);
     }
 
     @Override
     public BigDecimal getBigDecimal(String columnName) throws SQLException {
-        return rs.getBigDecimal(columnName);
+        return this.rs.getBigDecimal(columnName);
     }
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        return rs.getBigDecimal(columnIndex, scale);
+        return this.rs.getBigDecimal(columnIndex, scale);
     }
 
     @Override
     public BigDecimal getBigDecimal(String columnName, int scale) throws SQLException {
-        return rs.getBigDecimal(columnName, scale);
+        return this.rs.getBigDecimal(columnName, scale);
     }
 
     @Override
     public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        return rs.getBinaryStream(columnIndex);
+        return this.rs.getBinaryStream(columnIndex);
     }
 
     @Override
     public InputStream getBinaryStream(String columnName) throws SQLException {
-        return rs.getBinaryStream(columnName);
+        return this.rs.getBinaryStream(columnName);
     }
 
     @Override
     public Blob getBlob(int i) throws SQLException {
-        return rs.getBlob(i);
+        return this.rs.getBlob(i);
     }
 
     @Override
     public Blob getBlob(String colName) throws SQLException {
-        return rs.getBlob(colName);
+        return this.rs.getBlob(colName);
     }
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        return rs.getBoolean(columnIndex);
+        return this.rs.getBoolean(columnIndex);
     }
 
     @Override
     public boolean getBoolean(String columnName) throws SQLException {
-        return rs.getBoolean(columnName);
+        return this.rs.getBoolean(columnName);
     }
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        return rs.getByte(columnIndex);
+        return this.rs.getByte(columnIndex);
     }
 
     @Override
     public byte getByte(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getByte(columnName);
+        return this.rs.getByte(columnName);
     }
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getBytes(columnIndex);
+        return this.rs.getBytes(columnIndex);
     }
 
     @Override
     public byte[] getBytes(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getBytes(columnName);
+        return this.rs.getBytes(columnName);
     }
 
     @Override
     public Reader getCharacterStream(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getCharacterStream(columnIndex);
+        return this.rs.getCharacterStream(columnIndex);
     }
 
     @Override
     public Reader getCharacterStream(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getCharacterStream(columnName);
+        return this.rs.getCharacterStream(columnName);
     }
 
     @Override
     public Clob getClob(int i) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getClob(i);
+        return this.rs.getClob(i);
     }
 
     @Override
     public Clob getClob(String colName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getClob(colName);
+        return this.rs.getClob(colName);
     }
 
     @Override
     public int getConcurrency() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getConcurrency();
+        return this.rs.getConcurrency();
     }
 
     @Override
     public String getCursorName() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getCursorName();
+        return this.rs.getCursorName();
     }
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDate(columnIndex);
+        return this.rs.getDate(columnIndex);
     }
 
     @Override
     public Date getDate(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDate(columnName);
+        return this.rs.getDate(columnName);
     }
 
     @Override
     public Date getDate(int columnIndex, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDate(columnIndex, cal);
+        return this.rs.getDate(columnIndex, cal);
     }
 
     @Override
     public Date getDate(String columnName, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDate(columnName, cal);
+        return this.rs.getDate(columnName, cal);
     }
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDouble(columnIndex);
+        return this.rs.getDouble(columnIndex);
     }
 
     @Override
     public double getDouble(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getDouble(columnName);
+        return this.rs.getDouble(columnName);
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getFetchDirection();
+        return this.rs.getFetchDirection();
     }
 
     @Override
     public int getFetchSize() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getFetchSize();
+        return this.rs.getFetchSize();
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getFloat(columnIndex);
+        return this.rs.getFloat(columnIndex);
     }
 
     @Override
     public float getFloat(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getFloat(columnName);
+        return this.rs.getFloat(columnName);
     }
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getInt(columnIndex);
+        return this.rs.getInt(columnIndex);
     }
 
     @Override
     public int getInt(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getInt(columnName);
+        return this.rs.getInt(columnName);
     }
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getLong(columnIndex);
+        return this.rs.getLong(columnIndex);
     }
 
     @Override
     public long getLong(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getLong(columnName);
+        return this.rs.getLong(columnName);
     }
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getMetaData();
+        return this.rs.getMetaData();
     }
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getObject(columnIndex);
+        return this.rs.getObject(columnIndex);
     }
 
 
     @Override
     public Object getObject(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getObject(columnName);
+        return this.rs.getObject(columnName);
     }
 
     @Override
     public Object getObject(int i, Map<String, Class<?>> map) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getObject(i, map);
+        return this.rs.getObject(i, map);
     }
 
 
@@ -447,20 +444,8 @@ public class PageableResultSet implements Pageable {
     @Override
     public Object getObject(String colName, Map<String, Class<?>> map) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getObject(colName, map);
+        return this.rs.getObject(colName, map);
     }
-
-
-    //--------
-
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -475,259 +460,257 @@ public class PageableResultSet implements Pageable {
 
     @Override
     public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
-
+        this.rs.updateObject(columnIndex,x,targetSqlType,scaleOrLength);
     }
 
     @Override
     public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
-
+        this.rs.updateObject(columnLabel,x,targetSqlType,scaleOrLength);
     }
 
     @Override
     public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
-
+        this.rs.updateObject(columnIndex,x,targetSqlType);
     }
 
     @Override
     public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
-
+        this.rs.updateObject(columnLabel,x,targetSqlType);
     }
-
-    //------
 
 
 
     @Override
     public Ref getRef(int i) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getRef(i);
+        return this.rs.getRef(i);
     }
 
     @Override
     public Ref getRef(String colName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getRef(colName);
+        return this.rs.getRef(colName);
     }
 
     @Override
     public int getRow() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getRow();
+        return this.rs.getRow();
     }
 
     @Override
 
     public short getShort(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getShort(columnIndex);
+        return this.rs.getShort(columnIndex);
     }
     @Override
     public short getShort(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getShort(columnName);
+        return this.rs.getShort(columnName);
     }
     @Override
     public Statement getStatement() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getStatement();
+        return this.rs.getStatement();
     }
     @Override
     public String getString(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getString(columnIndex);
+        return this.rs.getString(columnIndex);
     }
     @Override
     public String getString(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getString(columnName);
+        return this.rs.getString(columnName);
     }
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTime(columnIndex);
+        return this.rs.getTime(columnIndex);
     }
     @Override
     public Time getTime(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTime(columnName);
+        return this.rs.getTime(columnName);
     }
 
     @Override
     public Time getTime(int columnIndex, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTime(columnIndex, cal);
+        return this.rs.getTime(columnIndex, cal);
     }
 
     @Override
     public Time getTime(String columnName, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTime(columnName, cal);
+        return this.rs.getTime(columnName, cal);
     }
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTimestamp(columnIndex);
+        return this.rs.getTimestamp(columnIndex);
     }
 
     @Override
     public Timestamp getTimestamp(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTimestamp(columnName);
+        return this.rs.getTimestamp(columnName);
     }
     @Override
     public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTimestamp(columnIndex, cal);
+        return this.rs.getTimestamp(columnIndex, cal);
     }
     @Override
     public Timestamp getTimestamp(String columnName, Calendar cal) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getTimestamp(columnName, cal);
+        return this.rs.getTimestamp(columnName, cal);
     }
     @Override
     public int getType() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getType();
+        return this.rs.getType();
     }
 
     @Override
     public URL getURL(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getURL(columnIndex);
+        return this.rs.getURL(columnIndex);
     }
 
     @Override
     public URL getURL(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getURL(columnName);
+        return this.rs.getURL(columnName);
     }
 
     @Override
     public InputStream getUnicodeStream(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getUnicodeStream(columnIndex);
+        return this.rs.getUnicodeStream(columnIndex);
     }
     @Override
     public InputStream getUnicodeStream(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getUnicodeStream(columnName);
+        return this.rs.getUnicodeStream(columnName);
     }
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getWarnings();
+        return this.rs.getWarnings();
     }
 
     @Override
     public void insertRow() throws SQLException {
         // TODO 自动生成方法存根
-        rs.insertRow();
+        this.rs.insertRow();
 
     }
 
     @Override
     public boolean isAfterLast() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.isAfterLast();
+        return this.rs.isAfterLast();
     }
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.isBeforeFirst();
+        return this.rs.isBeforeFirst();
     }
 
     @Override
     public boolean isFirst() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.isFirst();
+        return this.rs.isFirst();
     }
 
     @Override
     public boolean isLast() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.isLast();
+        return this.rs.isLast();
     }
 
     @Override
     public boolean last() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.last();
+        return this.rs.last();
     }
 
     @Override
     public void moveToCurrentRow() throws SQLException {
         // TODO 自动生成方法存根
-        rs.moveToCurrentRow();
+        this.rs.moveToCurrentRow();
     }
 
     @Override
     public void moveToInsertRow() throws SQLException {
         // TODO 自动生成方法存根
-        rs.moveToInsertRow();
+        this.rs.moveToInsertRow();
     }
 
     @Override
     public boolean previous() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.previous();
+        return this.rs.previous();
     }
 
     @Override
     public void refreshRow() throws SQLException {
         // TODO 自动生成方法存根
-        rs.refreshRow();
+        this.rs.refreshRow();
     }
 
     @Override
     public boolean relative(int rows) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.relative(rows);
+        return this.rs.relative(rows);
     }
 
     @Override
     public boolean rowDeleted() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.rowDeleted();
+        return this.rs.rowDeleted();
     }
 
     @Override
     public boolean rowInserted() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.rowInserted();
+        return this.rs.rowInserted();
     }
 
     @Override
     public boolean rowUpdated() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.rowUpdated();
+        return this.rs.rowUpdated();
     }
 
     @Override
     public void setFetchDirection(int direction) throws SQLException {
         // TODO 自动生成方法存根
-        rs.setFetchDirection(direction);
+        this.rs.setFetchDirection(direction);
     }
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
         // TODO 自动生成方法存根
-        rs.setFetchSize(rows);
+        this.rs.setFetchSize(rows);
     }
 
     @Override
     public void updateArray(int columnIndex, Array x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateArray(columnIndex, x);
+        this.rs.updateArray(columnIndex, x);
     }
 
     @Override
     public void updateArray(String columnName, Array x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateArray(columnName, x);
+        this.rs.updateArray(columnName, x);
     }
 
 
@@ -735,277 +718,277 @@ public class PageableResultSet implements Pageable {
     @Override
     public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateAsciiStream(columnIndex, x, length);
+        this.rs.updateAsciiStream(columnIndex, x, length);
     }
 
     @Override
     public void updateAsciiStream(String columnName, InputStream x, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateAsciiStream(columnName, x, length);
+        this.rs.updateAsciiStream(columnName, x, length);
     }
 
     @Override
     public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBigDecimal(columnIndex, x);
+        this.rs.updateBigDecimal(columnIndex, x);
     }
 
     @Override
     public void updateBigDecimal(String columnName, BigDecimal x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBigDecimal(columnName, x);
+        this.rs.updateBigDecimal(columnName, x);
     }
 
     @Override
     public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBinaryStream(columnIndex, x, length);
+        this.rs.updateBinaryStream(columnIndex, x, length);
     }
 
     @Override
     public void updateBinaryStream(String columnName, InputStream x, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBinaryStream(columnName, x, length);
+        this.rs.updateBinaryStream(columnName, x, length);
     }
 
     @Override
     public void updateBlob(int columnIndex, Blob x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBlob(columnIndex, x);
+        this.rs.updateBlob(columnIndex, x);
     }
 
     @Override
     public void updateBlob(String columnName, Blob x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBlob(columnName, x);
+        this.rs.updateBlob(columnName, x);
     }
 
     @Override
     public void updateBoolean(int columnIndex, boolean x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBoolean(columnIndex, x);
+        this.rs.updateBoolean(columnIndex, x);
     }
 
     @Override
     public void updateBoolean(String columnName, boolean x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBoolean(columnName, x);
+        this.rs.updateBoolean(columnName, x);
     }
 
     @Override
     public void updateByte(int columnIndex, byte x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateByte(columnIndex, x);
+        this.rs.updateByte(columnIndex, x);
     }
 
     @Override
     public void updateByte(String columnName, byte x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateByte(columnName, x);
+        this.rs.updateByte(columnName, x);
     }
 
     @Override
     public void updateBytes(int columnIndex, byte[] x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBytes(columnIndex, x);
+        this.rs.updateBytes(columnIndex, x);
     }
 
     @Override
     public void updateBytes(String columnName, byte[] x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateBytes(columnName, x);
+        this.rs.updateBytes(columnName, x);
     }
 
     @Override
     public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateCharacterStream(columnIndex, x, length);
+        this.rs.updateCharacterStream(columnIndex, x, length);
     }
 
     @Override
     public void updateCharacterStream(String columnName, Reader reader, int length) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateCharacterStream(columnName, reader, length);
+        this.rs.updateCharacterStream(columnName, reader, length);
     }
 
     @Override
     public void updateClob(int columnIndex, Clob x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateClob(columnIndex, x);
+        this.rs.updateClob(columnIndex, x);
     }
 
     @Override
     public void updateClob(String columnName, Clob x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateClob(columnName, x);
+        this.rs.updateClob(columnName, x);
     }
 
     @Override
     public void updateDate(int columnIndex, Date x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateDate(columnIndex, x);
+        this.rs.updateDate(columnIndex, x);
     }
 
     @Override
     public void updateDate(String columnName, Date x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateDate(columnName, x);
+        this.rs.updateDate(columnName, x);
     }
 
     @Override
     public void updateDouble(int columnIndex, double x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateDouble(columnIndex, x);
+        this.rs.updateDouble(columnIndex, x);
     }
 
     @Override
     public void updateDouble(String columnName, double x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateDouble(columnName, x);
+        this.rs.updateDouble(columnName, x);
     }
 
     @Override
     public void updateFloat(int columnIndex, float x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateFloat(columnIndex, x);
+        this.rs.updateFloat(columnIndex, x);
     }
 
     @Override
     public void updateFloat(String columnName, float x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateFloat(columnName, x);
+        this.rs.updateFloat(columnName, x);
     }
 
     @Override
     public void updateInt(int columnIndex, int x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateInt(columnIndex, x);
+        this.rs.updateInt(columnIndex, x);
     }
 
     @Override
     public void updateInt(String columnName, int x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateInt(columnName, x);
+        this.rs.updateInt(columnName, x);
     }
 
     @Override
     public void updateLong(int columnIndex, long x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateLong(columnIndex, x);
+        this.rs.updateLong(columnIndex, x);
     }
 
     @Override
     public void updateLong(String columnName, long x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateLong(columnName, x);
+        this.rs.updateLong(columnName, x);
     }
 
     @Override
     public void updateNull(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateNull(columnIndex);
+        this.rs.updateNull(columnIndex);
     }
 
     @Override
     public void updateNull(String columnName) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateNull(columnName);
+        this.rs.updateNull(columnName);
     }
 
     @Override
     public void updateObject(int columnIndex, Object x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateObject(columnIndex, x);
+        this.rs.updateObject(columnIndex, x);
     }
 
     @Override
     public void updateObject(String columnName, Object x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateObject(columnName, x);
+        this.rs.updateObject(columnName, x);
     }
 
     @Override
     public void updateObject(int columnIndex, Object x, int scale) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateObject(columnIndex, x, scale);
+        this.rs.updateObject(columnIndex, x, scale);
     }
 
     @Override
     public void updateObject(String columnName, Object x, int scale) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateObject(columnName, x, scale);
+        this.rs.updateObject(columnName, x, scale);
     }
 
     @Override
     public void updateRef(int columnIndex, Ref x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateRef(columnIndex, x);
+        this.rs.updateRef(columnIndex, x);
     }
 
     @Override
     public void updateRef(String columnName, Ref x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateRef(columnName, x);
+        this.rs.updateRef(columnName, x);
     }
 
     @Override
     public void updateRow() throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateRow();
+        this.rs.updateRow();
     }
 
     @Override
     public void updateShort(int columnIndex, short x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateShort(columnIndex, x);
+        this.rs.updateShort(columnIndex, x);
     }
 
     @Override
     public void updateShort(String columnName, short x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateShort(columnName, x);
+        this.rs.updateShort(columnName, x);
     }
 
     @Override
     public void updateString(int columnIndex, String x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateString(columnIndex, x);
+        this.rs.updateString(columnIndex, x);
     }
 
     @Override
     public void updateString(String columnName, String x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateString(columnName, x);
+        this.rs.updateString(columnName, x);
     }
 
     @Override
     public void updateTime(int columnIndex, Time x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateTime(columnIndex, x);
+        this.rs.updateTime(columnIndex, x);
     }
 
     @Override
     public void updateTime(String columnName, Time x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateTime(columnName, x);
+        this.rs.updateTime(columnName, x);
     }
 
     @Override
     public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateTimestamp(columnIndex, x);
+        this.rs.updateTimestamp(columnIndex, x);
     }
 
     @Override
     public void updateTimestamp(String columnName, Timestamp x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateTimestamp(columnName, x);
+        this.rs.updateTimestamp(columnName, x);
     }
 
     @Override
     public boolean wasNull() throws SQLException {
         // TODO 自动生成方法存根
-        return rs.wasNull();
+        return this.rs.wasNull();
     }
 
 
@@ -1013,289 +996,289 @@ public class PageableResultSet implements Pageable {
     @Override
     public RowId getRowId(int columnIndex) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getRowId(columnIndex);
+        return this.rs.getRowId(columnIndex);
     }
 
     @Override
     public RowId getRowId(String columnLabel) throws SQLException {
         // TODO 自动生成方法存根
-        return rs.getRowId(columnLabel);
+        return this.rs.getRowId(columnLabel);
     }
 
     @Override
     public void updateRowId(int columnIndex, RowId x) throws SQLException {
         // TODO 自动生成方法存根
-        rs.updateRowId(columnIndex , x);
+        this.rs.updateRowId(columnIndex , x);
     }
 
     @Override
     public void updateRowId(String columnLabel, RowId x) throws SQLException {
 
         // TODO 自动生成方法存根
-        rs.updateRowId(columnLabel , x);
+        this.rs.updateRowId(columnLabel , x);
     }
 
     @Override
     public int getHoldability() throws SQLException {
-        return rs.getHoldability();
+        return this.rs.getHoldability();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return rs.isClosed();
+        return this.rs.isClosed();
     }
 
     @Override
     public void updateNString(int columnIndex, String nString) throws SQLException {
 
-        rs.updateNString(columnIndex,nString);
+        this.rs.updateNString(columnIndex,nString);
     }
 
     @Override
     public void updateNString(String columnLabel, String nString) throws SQLException {
 
-        rs.updateNString(columnLabel,nString);
+        this.rs.updateNString(columnLabel,nString);
     }
 
     @Override
     public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
 
-        rs.updateNClob(columnIndex,nClob);
+        this.rs.updateNClob(columnIndex,nClob);
     }
 
     @Override
     public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
 
-        rs.updateNClob(columnLabel,nClob);
+        this.rs.updateNClob(columnLabel,nClob);
     }
 
     @Override
     public NClob getNClob(int columnIndex) throws SQLException {
-        return rs.getNClob(columnIndex);
+        return this.rs.getNClob(columnIndex);
     }
 
     @Override
     public NClob getNClob(String columnLabel) throws SQLException {
-        return rs.getNClob(columnLabel);
+        return this.rs.getNClob(columnLabel);
     }
 
     @Override
     public SQLXML getSQLXML(int columnIndex) throws SQLException {
-        return rs.getSQLXML(columnIndex);
+        return this.rs.getSQLXML(columnIndex);
     }
 
     @Override
     public SQLXML getSQLXML(String columnLabel) throws SQLException {
-        return rs.getSQLXML(columnLabel);
+        return this.rs.getSQLXML(columnLabel);
     }
 
     @Override
     public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
-        rs.updateSQLXML(columnIndex,xmlObject);
+        this.rs.updateSQLXML(columnIndex,xmlObject);
     }
 
     @Override
     public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
 
-        rs.updateSQLXML(columnLabel,xmlObject);
+        this.rs.updateSQLXML(columnLabel,xmlObject);
     }
 
     @Override
     public String getNString(int columnIndex) throws SQLException {
-        return rs.getNString( columnIndex);
+        return this.rs.getNString( columnIndex);
     }
 
     @Override
     public String getNString(String columnLabel) throws SQLException {
-            return rs.getNString(columnLabel);
+            return this.rs.getNString(columnLabel);
     }
 
     @Override
     public Reader getNCharacterStream(int columnIndex) throws SQLException {
-        return rs.getNCharacterStream(columnIndex);
+        return this.rs.getNCharacterStream(columnIndex);
     }
 
     @Override
     public Reader getNCharacterStream(String columnLabel) throws SQLException {
-        return rs.getNCharacterStream(columnLabel);
+        return this.rs.getNCharacterStream(columnLabel);
     }
 
     @Override
     public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
 
-        rs.updateNCharacterStream(columnIndex,x,length);
+        this.rs.updateNCharacterStream(columnIndex,x,length);
     }
 
     @Override
     public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-        rs.updateNCharacterStream(columnLabel,reader,length);
+        this.rs.updateNCharacterStream(columnLabel,reader,length);
     }
 
     @Override
     public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
 
-        rs.updateAsciiStream(columnIndex,x,length);
+        this.rs.updateAsciiStream(columnIndex,x,length);
     }
 
     @Override
     public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
 
-        rs.updateBinaryStream(columnIndex,x,length);
+        this.rs.updateBinaryStream(columnIndex,x,length);
     }
 
     @Override
     public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
 
-        rs.updateCharacterStream(columnIndex,x,length);
+        this.rs.updateCharacterStream(columnIndex,x,length);
     }
 
     @Override
     public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
 
-        rs.updateAsciiStream(columnLabel,x,length);
+        this.rs.updateAsciiStream(columnLabel,x,length);
     }
 
     @Override
     public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
 
-        rs.updateBinaryStream(columnLabel,x,length);
+        this.rs.updateBinaryStream(columnLabel,x,length);
     }
 
     @Override
     public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
 
-        rs.updateCharacterStream(columnLabel,reader,length);
+        this.rs.updateCharacterStream(columnLabel,reader,length);
     }
 
     @Override
     public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
 
-        rs.updateBlob(columnIndex,inputStream,length);
+        this.rs.updateBlob(columnIndex,inputStream,length);
     }
 
     @Override
     public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
 
-        rs.updateBlob(columnLabel,inputStream,length);
+        this.rs.updateBlob(columnLabel,inputStream,length);
     }
 
     @Override
     public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
 
-        rs.updateClob(columnIndex,reader,length);
+        this.rs.updateClob(columnIndex,reader,length);
     }
 
     @Override
     public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
 
-        rs.updateClob(columnLabel,reader);
+        this.rs.updateClob(columnLabel,reader);
     }
 
     @Override
     public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
 
-        rs.updateNClob(columnIndex,reader,length);
+        this.rs.updateNClob(columnIndex,reader,length);
     }
 
     @Override
     public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
 
-        rs.updateNClob(columnLabel,reader,length);
+        this.rs.updateNClob(columnLabel,reader,length);
     }
 
     @Override
     public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
 
-        rs.updateNCharacterStream(columnIndex,x);
+        this.rs.updateNCharacterStream(columnIndex,x);
     }
 
     @Override
     public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
 
-        rs.updateNCharacterStream(columnLabel,reader);
+        this.rs.updateNCharacterStream(columnLabel,reader);
     }
 
     @Override
     public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
 
-        rs.updateAsciiStream(columnIndex,x);
+        this.rs.updateAsciiStream(columnIndex,x);
     }
 
     @Override
     public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
 
-        rs.updateBinaryStream(columnIndex,x);
+        this.rs.updateBinaryStream(columnIndex,x);
     }
 
     @Override
     public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
 
-        rs.updateCharacterStream(columnIndex,x);
+        this.rs.updateCharacterStream(columnIndex,x);
     }
 
     @Override
     public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
 
-        rs.updateAsciiStream(columnLabel,x);
+        this.rs.updateAsciiStream(columnLabel,x);
     }
 
     @Override
     public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
 
-        rs.updateBinaryStream(columnLabel,x);
+        this.rs.updateBinaryStream(columnLabel,x);
     }
 
     @Override
     public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
 
-        rs.updateCharacterStream(columnLabel,reader);
+        this.rs.updateCharacterStream(columnLabel,reader);
     }
 
     @Override
     public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
 
-        rs.updateBlob(columnIndex,inputStream);
+        this.rs.updateBlob(columnIndex,inputStream);
     }
 
     @Override
     public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
 
-        rs.updateBlob(columnLabel,inputStream);
+        this.rs.updateBlob(columnLabel,inputStream);
     }
 
     @Override
     public void updateClob(int columnIndex, Reader reader) throws SQLException {
 
-        rs.updateClob(columnIndex,reader);
+        this.rs.updateClob(columnIndex,reader);
     }
 
     @Override
     public void updateClob(String columnLabel, Reader reader) throws SQLException {
 
-        rs.updateClob(columnLabel,reader);
+        this.rs.updateClob(columnLabel,reader);
     }
 
     @Override
     public void updateNClob(int columnIndex, Reader reader) throws SQLException {
 
-        rs.updateNClob(columnIndex,reader);
+        this.rs.updateNClob(columnIndex,reader);
     }
 
     @Override
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
 
-        rs.updateNClob(columnLabel,reader);
+        this.rs.updateNClob(columnLabel,reader);
     }
 
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return rs.unwrap(iface);
+        return this.rs.unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return rs.isWrapperFor(iface);
+        return this.rs.isWrapperFor(iface);
     }
 
 }
