@@ -52,11 +52,19 @@ public class PageableResultSet implements Pageable {
 
 
     public PageableResultSet(java.sql.ResultSet rs ,Boolean isOracle ,int rowsCount) throws java.sql.SQLException {
-        if(this.rs==null) throw new SQLException("given ResultSet is NULL","user");
+
+        // 传入 ResultSet rs 进行判断
+        if(rs==null) throw new SQLException("given ResultSet is NULL","user");
         if(!isOracle){
-            this.rs.last();
+            /**
+             *
+             * 跳到结尾
+             * 查看长度
+             * 返回到头部
+             */
+            rs.last();
             this.rowsCount=rs.getRow();
-            this.rs.beforeFirst();
+            rs.beforeFirst();
             this.rs =rs;
         }else {
             this.rowsCount =rowsCount ;
