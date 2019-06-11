@@ -67,11 +67,10 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     /**
      *
      * Process a batch of events performing SQL Queries
-     *
-     *
      */
 	@Override
 	public Status process() throws EventDeliveryException {
+
         Status status = Status.BACKOFF;
 
         logger.info("started  process   rdb Source");
