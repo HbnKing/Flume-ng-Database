@@ -64,7 +64,8 @@ Mongodb 配置文件[详见](./MongoDB/src/conf/Sink_conf_demo1)
 
 ## 鸣谢
 感谢 大佬们的付出 思想源于[keedio](https://github.com/keedio/flume-ng-sql-source) 
-
+## QQ群 
+![](./QQ.jpeg)
 ## 需要帮助  
 flume 批量发送 单条发送事务性  及 配置  
 解析类型为 Date 和 timestamp  可能存在的风险  
