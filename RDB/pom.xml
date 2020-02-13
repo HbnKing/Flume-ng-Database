@@ -13,6 +13,9 @@
     <properties>
         <!--已经在父类pom中配置-->
         <mysql.driver.version>6.0.5</mysql.driver.version>
+        <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+        <!-- 解决OSX找不到javadoc问题 -->
+
     </properties>
     <dependencies>
         <!--flume  核心包 -->
@@ -44,7 +47,7 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.driver.version}</version>
@@ -53,7 +56,7 @@
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>${oracle.driver.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
  <build>
     <plugins>
