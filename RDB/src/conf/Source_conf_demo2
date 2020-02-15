@@ -25,7 +25,7 @@ a1.sources.r1.columnstoselect = id,age,sex
 #a1.sources.r1.filename = sqlSource.status
 
 #每次 吐出量 与 内存有关
-a1.sources.r1.batchsize = 1000
+a1.sources.r1.batchsize = 128
 
 # 输出
 a1.sinks.k1.type = logger
@@ -33,8 +33,8 @@ a1.sinks.k1.type = logger
 
 # 指定Flume channel
 a1.channels.c1.type = memory
-a1.channels.c1.capacity = 1000
-a1.channels.c1.transactionCapacity = 100
+a1.channels.c1.capacity = 1024
+a1.channels.c1.transactionCapacity = 1024
 
 # 绑定source和sink到channel上
 a1.sources.r1.channels = c1
