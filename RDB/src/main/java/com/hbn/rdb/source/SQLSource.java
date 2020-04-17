@@ -50,7 +50,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         logger.info("started configure() ");
 
         logger.info("Reading and processing configuration values for source " + getName());
-		
+
     	/* Initialize configuration parameters */
     	sqlSourceHelper = new SQLSourceHelper(context, this.getName());
         /* get  currentIndex */
@@ -63,7 +63,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
         /* Establish connection with database ,done  in sqlSourceHelper */
     }
-    
+
     /**
      *
      * Process a batch of events performing SQL Queries
@@ -101,6 +101,11 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         } finally {
             //修改 index  使其自增
             sqlSourceHelper.setCurrentIndex(currentIndex);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         return status;
@@ -109,7 +114,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
 
 
- 
+
 	/**
 	 * Starts the source. Starts the metrics counter.
 	 */
@@ -376,6 +381,6 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         status = Status.READY ;
         return status;
     }
-    
+
 
 }
