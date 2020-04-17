@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MongoDB/MongoDB.iml" filepath="$PROJECT_DIR$/MongoDB/MongoDB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mysql/Mysql.iml" filepath="$PROJECT_DIR$/Mysql/Mysql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RDB/RDB.iml" filepath="$PROJECT_DIR$/RDB/RDB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/flume-ng-DataBase.iml" filepath="$PROJECT_DIR$/.idea/flume-ng-DataBase.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,15 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+RDB
+
+
+From: 'Alibaba Group' (https://github.com/alibaba)
+  - fastjson (https://github.com/alibaba/fastjson) com.alibaba:fastjson:jar:1.2.49
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

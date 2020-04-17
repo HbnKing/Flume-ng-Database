@@ -1,0 +1,19 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+MongoDB
+
+
+From: 'an unknown organization'
+  - BSON (https://bsonspec.org) org.mongodb:bson:jar:3.9.1
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - MongoDB Java Driver (http://www.mongodb.org) org.mongodb:mongodb-driver:jar:3.9.1
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - MongoDB Java Driver Core (http://www.mongodb.org) org.mongodb:mongodb-driver-core:jar:3.9.1
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

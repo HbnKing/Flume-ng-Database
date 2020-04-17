@@ -1,0 +1,17 @@
+org/apache/flume/sink/jdbc/TestJDBCSinkCreation.class
+org/apache/flume/sink/jdbc/TestPreparedStatementParser.class
+org/apache/flume/sink/jdbc/TestPreparedStatementParser$TestCustomParameter.class
+org/apache/flume/sink/jdbc/TestPreparedStatementJDBCSink.class
+hbn/PageModule.class
+hbn/Sex.class
+org/apache/flume/sink/jdbc/TestJDBCConnectionManager.class
+org/apache/flume/sink/jdbc/TestAbstractJDBCSink$1.class
+org/apache/flume/sink/jdbc/TestParameter.class
+hbn/TestJson.class
+org/apache/flume/sink/jdbc/TestParameter$TestCustomParameter.class
+hbn/SQLSourceHelperTest.class
+hbn/Area.class
+hbn/Test.class
+org/apache/flume/sink/jdbc/TestAbstractJDBCSink$2.class
+org/apache/flume/sink/jdbc/TestAbstractJDBCSink.class
+hbn/JdbcConnectionTest.class
