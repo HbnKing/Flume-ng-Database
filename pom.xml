@@ -128,7 +128,7 @@
         <zookeeper.version>3.4.5</zookeeper.version>
         <!-- 引入的依赖-->
         <flume.version>1.9.0</flume.version>
-        <fastjson.version>1.2.49</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <!--数据库的驱动 -->
         <!--修改各个环境驱动版本的位置  测试  -->
         <mysql.driver.version>6.0.5</mysql.driver.version>
