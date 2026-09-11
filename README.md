@@ -1,5 +1,9 @@
 # Flume-SqlSource
-Flume-SqlSource
+Flume-SqlSource  
+
+本项目已经停止维护 其他数据库迁移可以查阅   
+[whaleal-dev/rds-sync](https://github.com/whaleal-dev/rds-sync)  
+[whaleal-dev/mongo-sync](https://github.com/whaleal-dev/mongo-sync)
 
 Flume  是一个强大的日志采集工具  
 在大数据 领域使用 非常广泛 本身的架构又非常简单，而且灵活 。
